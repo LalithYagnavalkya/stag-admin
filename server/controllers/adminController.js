@@ -4,6 +4,9 @@ const jwt = require("jsonwebtoken");
 
 const signup = async (req, res) => {
   const { username, password } = req.body;
+  console.log(username, password);
+  console.log(req.body);
+  console.log("here");
   try {
     const existingAdmin = await adminModel.findOne({ username: username });
     if (existingAdmin) {
@@ -28,5 +31,30 @@ const signup = async (req, res) => {
   }
 };
 
-const singin = (req, res) => {};
-module.exports = { singin, signup };
+const signin = async (req, res) => {
+  const { username, password } = req.body;
+  console.log(req.body);
+  try {
+    const existingAdmin = await adminModel.findOne({ username: username });
+    if (!existingAdmin) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const matchPassword = await bcrypt.compare(
+      password,
+      existingAdmin.password
+    );
+    console.log(matchPassword);
+    if (!matchPassword) {
+      return res.status(400).json({ message: "Invalid Credentials" });
+    }
+    const token = jwt.sign(
+      { username: existingAdmin.username, id: existingAdmin._id },
+      process.env.JWT_SECRET
+    );
+    res.status(201).json({ user: existingAdmin, token: token });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+module.exports = { signin, signup };
