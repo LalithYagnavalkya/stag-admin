@@ -1,20 +1,19 @@
-const mongoose = require("mongoose");
-const { model } = require("mongoose");
-const customerSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    requierd: true,
-  },
-  captial: {
-    type: Number,
-  },
-  // transaction: [{
-  //   transaction: {type: n}
-  // }],
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+const customerModel = require("../models/customer");
 
-module.exports = mongoose.model("User", customerSchema);
+const createCustomer = (req, res) => {};
+const updateCustomer = (req, res) => {};
+const deleteCustomer = (req, res) => {};
+const getCustomers = (req, res) => {};
+const getCustomer = (req, res) => {};
+const updateReturns = (req, res) => {};
+const updateCapital = (req, res) => {};
+
+module.exports = {
+  createCustomer,
+  updateCustomer,
+  deleteCustomer,
+  getCustomer,
+  getCustomers,
+  updateReturns,
+  updateCapital,
+};
