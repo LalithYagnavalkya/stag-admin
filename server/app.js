@@ -3,6 +3,7 @@ const cors = require("cors");
 
 const app = express();
 const admin = require("./routes/adminRoutes");
+const customerRouter = require("./routes/customerRoutes");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -16,6 +17,7 @@ app.use(cors());
 // );
 
 app.use("/api/v1", admin);
+app.use("/api/v1", customerRouter);
 
 app.get("/", (req, res) => {
   res.send("Server is working");
