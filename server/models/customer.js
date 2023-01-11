@@ -40,4 +40,4 @@ const adminSchema = new mongoose.Schema({
   transactions: transactionSchema,
 });
 
-module.exports = mongoose.model("User", adminSchema);
+module.exports = mongoose.model("Customer", adminSchema);
