@@ -16,6 +16,9 @@ app.use(cors());
 //   })
 // );
 
+//stati folder path
+// app.use(express.static(path.resolve(__dirname, "public")));
+
 app.use("/api/v1", admin);
 app.use("/api/v1", customerRouter);
 

@@ -7,6 +7,7 @@ const {
   getCustomers,
   updateReturns,
   updateCapital,
+  exportUsers,
 } = require("../controllers/customerController");
 const auth = require("../middleware/auth");
 
@@ -24,5 +25,7 @@ customerRouter.put("/:id", auth, updateCustomer);
 customerRouter.patch("/:id", auth, updateCapital);
 
 customerRouter.patch("/:id", auth, updateReturns);
+
+customerRouter.post("/exportUsers", auth, exportUsers);
 
 module.exports = customerRouter;

@@ -18,25 +18,37 @@ const transactionSchema = new mongoose.Schema([
   },
 ]);
 const adminSchema = new mongoose.Schema({
-  email: {
-    type: String,
-  },
   username: {
     type: String,
     required: true,
   },
-  note: {
+  email: {
+    type: String,
+  },
+  capital: { type: Number, require: true, default: 0, min: 0 },
+  returns: {
+    type: String,
+  },
+  date: {
     type: String,
   },
   createdAt: {
     type: Date,
     default: () => Date.now(),
   },
-  returns: {
-    type: Number,
-    require: true,
+  note: {
+    type: [String],
   },
-  Captial: { type: Number, required: true, min: 0 },
+
+  googleid: {
+    type: String,
+    // required: true,
+  },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+
   transactions: transactionSchema,
 });
 
