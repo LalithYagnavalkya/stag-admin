@@ -62,6 +62,7 @@ const LoginPage = () => {
               />
             </div>
           </div>
+          {isError && <span style={{ color: "red" }}>invalid credentials</span>}
           <button className="login-btn" onClick={(e) => loginHandler(e)}>
             Login In
           </button>
@@ -127,6 +128,9 @@ const LoginStyles = styled.div`
             color: #e8e8e8;
             font-family: "Metropolis";
             font-size: 17px;
+          }
+          input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px #1e1e1e inset !important;
           }
           padding: 7px;
           border-bottom: 1px solid white;
