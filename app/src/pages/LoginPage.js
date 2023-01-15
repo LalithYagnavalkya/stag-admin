@@ -1,7 +1,35 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
+import styled from "styled-components";
+import { login } from "../features/auth/authSlice";
 const LoginPage = () => {
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (store) => store.auth
+  );
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [loginreq, setReq] = useState({ username: "", password: "" });
+  const [password, setPassword] = useState("");
+
+  const loginHandler = (e) => {
+    e.preventDefault();
+    console.log("got triggered");
+    dispatch(login(loginreq));
+  };
+  useEffect(() => {
+    if (isError) {
+      console.log("error occuere in loginpage");
+    }
+    if (isSuccess || user) {
+      navigate(`/home`);
+    } else {
+      // dispatch(reset());
+    }
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
+
   return (
     <LoginStyles>
       <div className="login-header">
@@ -12,13 +40,31 @@ const LoginPage = () => {
           <span className="login-portal-heading">Admin Portal</span>
           <div className="login-admin-portal-container">
             <div>
-              <input type="text" placeholder="Username" />
+              <input
+                type="text"
+                placeholder="Username"
+                onChange={(e) =>
+                  setReq((prev) => {
+                    return { ...prev, username: e.target.value };
+                  })
+                }
+              />
             </div>
             <div>
-              <input type="text" placeholder="Password" />
+              <input
+                type="password"
+                placeholder="Password"
+                onChange={(e) =>
+                  setReq((prev) => {
+                    return { ...prev, password: e.target.value };
+                  })
+                }
+              />
             </div>
           </div>
-          <button className="login-btn">Login In</button>
+          <button className="login-btn" onClick={(e) => loginHandler(e)}>
+            Login In
+          </button>
         </div>
         <div className="login-right-section">
           <img src="/logo.svg" alt="" />
@@ -91,6 +137,7 @@ const LoginStyles = styled.div`
         padding: 15px 21px;
         background: #f27900;
         border-radius: 14px;
+        border: none;
         font-family: "Metropolis";
         font-family: "Poppins";
         font-style: normal;
