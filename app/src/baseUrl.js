@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const baseUrl = axios.create({
+  baseURL: "http://localhost:4000/api/v1",
   // baseURL: "https://campus-backend-drf-bfr8p.ondigitalocean.app/",
   // baseURL: 'http://13.233.194.93:8000/',
   // baseURL: 'https://hammerhead-app-4smkg.ondigitalocean.app/',
