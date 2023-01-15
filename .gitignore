@@ -1,4 +1,6 @@
 /app/node_modules
+/app/.env
+/app/.gitignore
 
 /server/node_modules
 /server/config/config.env
