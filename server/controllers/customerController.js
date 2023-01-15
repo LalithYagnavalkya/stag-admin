@@ -23,6 +23,17 @@ const getCustomers = (req, res) => {
     } else {
       sortBy[sort[0]] = "asc";
     }
+    customerModel.find({}, (err, docs) => {
+      if (!err) {
+        console.log(docs);
+        res.send(docs);
+        process.exit(1);
+      } else {
+        console.log(err);
+        throw err;
+      }
+    });
+    // res.status(200).json()
   } catch (err) {
     console.log(err);
   }
