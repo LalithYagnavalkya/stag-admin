@@ -14,22 +14,22 @@ const getCustomers = (req, res) => {
     const search = req.query.search || "";
     const sort = req.query.sort || "due";
 
-    req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
-    req.sort = {};
+    // req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
+    // req.sort = {};
 
-    let sortBy = {};
-    if (sort[1]) {
-      sortBy[sort[0]] = sort[1];
-    } else {
-      sortBy[sort[0]] = "asc";
-    }
+    // let sortBy = {};
+    // if (sort[1]) {
+    //   sortBy[sort[0]] = sort[1];
+    // } else {
+    //   sortBy[sort[0]] = "asc";
+    // }
     customerModel.find({}, (err, docs) => {
       if (!err) {
         console.log(docs);
         res.send(docs);
-        process.exit(1);
       } else {
         console.log(err);
+        // process.exit(1);
         throw err;
       }
     });
