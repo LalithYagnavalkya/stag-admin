@@ -29,9 +29,10 @@ const adminSchema = new mongoose.Schema({
   returns: {
     type: String,
   },
-  date: {
+  dueDate: {
     type: String,
   },
+
   createdAt: {
     type: Date,
     default: () => Date.now(),

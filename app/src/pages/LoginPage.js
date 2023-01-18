@@ -16,7 +16,6 @@ const LoginPage = () => {
 
   const loginHandler = (e) => {
     e.preventDefault();
-    console.log("got triggered " + loginreq);
     dispatch(login(loginreq));
   };
   useEffect(() => {

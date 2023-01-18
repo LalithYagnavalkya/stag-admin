@@ -1,35 +1,73 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-
+import moment, { now } from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllCustomers } from "../features/customers/customerSlice";
+import { cusomters } from "../data";
+import CustomerBar from "../components/CustomerBar";
 const Home = () => {
+  const { user } = useSelector((state) => state.auth);
+  const [time, setTime] = useState(new Date());
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(user.token);
+    dispatch(getAllCustomers({ token: user.token }));
+  }, []);
+
+  useEffect(() => {
+    setInterval(() => {
+      let nwDate = new Date();
+      setTime(nwDate);
+    }, 60000);
+  }, []);
   return (
     <HomeStyles>
-      <div className="header">
-        <span>
-          <img src="/logo.svg" alt="" />
-        </span>
-        <span>Stag Investments</span>
+      <div className="left-home">
+        <span>{moment(time).format("hh:mm A")}</span>
+        <span className="day-name">{moment().format("dddd")}</span>
+        <span className="date-name">{moment().format("MMMM d  yy")}</span>
+      </div>
+      <div className="right-home">
+        <span>Due this Week</span>
+        <div className="customers-container">
+          {cusomters.map((customer) => {
+            return <CustomerBar {...customer}></CustomerBar>;
+          })}
+        </div>
       </div>
     </HomeStyles>
   );
 };
+//https://stag-backend.onrender.com/
 
 export default Home;
 
 const HomeStyles = styled.div`
-  /* hell */
-  background-color: #1e1e1e;
-  padding: 2rem;
-  height: calc(100vh - 4rem);
+  /* background-color: white; */
+  height: 100%;
   color: white;
-  overflow: hidden;
-  .header {
+  padding: 0 5rem;
+  display: flex;
+  /* align-items: center; */
+  /* padding-top: 10rem; */
+  justify-content: space-between;
+  .left-home {
     display: flex;
-    align-items: center;
-    img {
-      /* height: 2rem; */
-    }
+    padding-top: 5rem;
+    flex: 0.5;
+    color: #d6d6d6;
+    flex-direction: column;
+    row-gap: 2rem;
     span {
+      font-size: 49px;
+
+      font-weight: 600;
+    }
+    .day-name {
+      font-size: 24px;
+    }
+    \.date-name {
       font-size: 24px;
     }
   }

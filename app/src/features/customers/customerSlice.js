@@ -10,10 +10,11 @@ const initialState = {
   message: "",
 };
 
-const getAllCustomers = createAsyncThunk(
+export const getAllCustomers = createAsyncThunk(
   "customers/getall",
   async (user, thunkAPI) => {
     try {
+      console.log(user);
       return await customerServices.getAllCustomers(user);
     } catch (error) {
       const message =
