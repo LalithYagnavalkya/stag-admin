@@ -6,6 +6,4 @@ const CustomerBar = ({ name, amount, returns, date }) => {
 };
 
 export default CustomerBar;
-const CustomerBarStyled = styled.div`
-    .
-`;
+const CustomerBarStyled = styled.div``;

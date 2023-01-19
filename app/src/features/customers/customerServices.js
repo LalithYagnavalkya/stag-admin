@@ -8,8 +8,12 @@ const getAllCustomers = async ({ token }) => {
     },
   });
   // console.log(token);
-  console.log(response);
-  return response;
+  if (response.status == 200) {
+    console.log(response);
+    return response.data;
+  } else {
+    return response;
+  }
 };
 const customerServices = {
   getAllCustomers,
