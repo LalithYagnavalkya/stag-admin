@@ -24,11 +24,20 @@ const CustomerCard = ({
   return (
     <CusCard>
       <span className="customer-card-name">{username}</span>
-
-      {date}
-      {capital}
-      {/* {email} */}
-      {returns}
+      <span className="customer-feilds">
+        <div className="customer-card-field">
+          <span>Capital</span>
+          <span>{capital}</span>
+        </div>
+        <div className="customer-card-field">
+          <span>Next Payment</span>
+          <span>{date}</span>
+        </div>
+        <div className="customer-card-field">
+          <span>Returns</span>
+          <span>{returns}</span>
+        </div>
+      </span>
     </CusCard>
   );
 };
@@ -38,4 +47,28 @@ export default CustomerCard;
 const CusCard = styled.div`
   color: black;
   background-color: white;
+  /* width: 311px; */
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  .customer-card-name {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 69.84%;
+    letter-spacing: -0.02em;
+  }
+  .customer-feilds {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+  }
+  .customer-feilds span {
+    font-family: "Metropolis";
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 69.84%;
+    letter-spacing: -0.02em;
+  }
 `;

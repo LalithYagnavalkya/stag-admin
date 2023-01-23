@@ -30,7 +30,7 @@ const CustomerPage = styled.div`
   flex-direction: column;
   height: 100%;
   .search-section {
-    background-color: white;
+    /* background-color: white; */
     height: 64px;
     display: flex;
     /* justify-content: center; */
@@ -39,7 +39,13 @@ const CustomerPage = styled.div`
   }
   .customers-cards-section {
     padding: 0 2rem;
-    background-color: yellow;
     height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+
+    row-gap: 22px;
+    column-gap: 26px;
+    overflow-y: scroll;
   }
 `;
