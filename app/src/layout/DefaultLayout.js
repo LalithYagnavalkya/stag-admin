@@ -13,7 +13,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
+import styled from "styled-components";
 
 const drawerWidth = 240;
 const navItems = ["Home", "Customers", "Profile"];
@@ -28,13 +29,19 @@ export default function DrawerAppBar(props) {
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
+      <CssBaseline />
       <Typography variant="h6" sx={{ my: 2 }}>
-        MUI
+        Stag Investments
       </Typography>
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItem key={item} disablePadding>
+          <ListItem
+            key={item}
+            disablePadding
+            component={Link}
+            to={`/app/${item}`}
+          >
             <ListItemButton sx={{ textAlign: "center" }}>
               <ListItemText primary={item} />
             </ListItemButton>
@@ -48,9 +55,9 @@ export default function DrawerAppBar(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", backgroundColor: "#1E1E1E" }}>
       <CssBaseline />
-      <AppBar component="nav">
+      <AppBar component="nav" sx={{ backgroundColor: "#1E1E1E" }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -66,12 +73,21 @@ export default function DrawerAppBar(props) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "block", sm: "block" } }}
           >
-            <img src="/logo.svg" />
-            Stag Investments
+            <MyTitle>
+              <div>
+                <img src="/logo.svg" />
+              </div>
+              <div>Stag Investments</div>
+            </MyTitle>
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: "#fff" }}>
+              <Button
+                key={item}
+                sx={{ color: "#fff" }}
+                component={Link}
+                to={`/app/${item}`}
+              >
                 {item}
               </Button>
             ))}
@@ -98,7 +114,8 @@ export default function DrawerAppBar(props) {
           {drawer}
         </Drawer>
       </Box>
-      <Box component="main" sx={{ p: 3 }}>
+
+      <Box component="main" sx={{ p: 3, backgroundColor: "#1E1E1E" }}>
         <Toolbar />
 
         <Outlet></Outlet>
@@ -106,3 +123,11 @@ export default function DrawerAppBar(props) {
     </Box>
   );
 }
+
+const MyTitle = styled.div`
+  display: flex;
+  align-items: center;
+  padding-top: 1rem;
+  column-gap: 0.6rem;
+  font-family: "Metropolis";
+`;
