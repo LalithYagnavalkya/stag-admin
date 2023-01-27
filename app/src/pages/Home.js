@@ -3,10 +3,12 @@ import styled from "styled-components";
 import moment, { now } from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCustomers } from "../features/customers/customerSlice";
-import { cusomters } from "../data";
+// import { cusomters } from "../data";
 import CustomerBar from "../components/CustomerBar";
 const Home = () => {
   const { user } = useSelector((state) => state.auth);
+  const { customers } = useSelector((store) => store.customers);
+
   const [time, setTime] = useState(new Date());
   const dispatch = useDispatch();
 
@@ -31,7 +33,7 @@ const Home = () => {
       <div className="right-home">
         <span>Due this Week</span>
         <div className="customers-container">
-          {cusomters.map((customer) => {
+          {customers.map((customer) => {
             return <CustomerBar {...customer}></CustomerBar>;
           })}
         </div>
@@ -43,15 +45,14 @@ const Home = () => {
 
 export default Home;
 
+// const HomeStyles = styled.div``;
+
 const HomeStyles = styled.div`
-  /* background-color: white; */
+  background-color: white;
   height: 100%;
   color: white;
   padding: 0 5rem;
   display: flex;
-  /* align-items: center; */
-  /* padding-top: 10rem; */
-  justify-content: space-between;
   .left-home {
     display: flex;
     padding-top: 5rem;

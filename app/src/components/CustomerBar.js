@@ -6,4 +6,7 @@ const CustomerBar = ({ name, amount, returns, date }) => {
 };
 
 export default CustomerBar;
-const CustomerBarStyled = styled.div``;
+const CustomerBarStyled = styled.div`
+  height: 53px;
+  background-color: #e6e7e8;
+`;
