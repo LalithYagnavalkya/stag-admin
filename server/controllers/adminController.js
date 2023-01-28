@@ -1,9 +1,9 @@
-const adminModel = require("../models/admin.js");
+const adminModel = require("../models/user.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const signup = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, role } = req.body;
   console.log(username, password);
   console.log(req.body);
   console.log("here");
@@ -18,6 +18,7 @@ const signup = async (req, res) => {
     const result = await adminModel.create({
       password: hashedPassword,
       username: username,
+      role: role,
     });
 
     const token = jwt.sign(

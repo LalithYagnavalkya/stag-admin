@@ -5,20 +5,9 @@ import { PrivateRoutes } from "./routes/PrivateRoutes";
 
 import { Home, Customers, Profile, LoginPage } from "./pages";
 import DefaultLayout from "./layout/DefaultLayout";
-import { ThemeProvider, createTheme } from "@mui/material";
-import { dark, light } from "@mui/material/styles/createPalette";
 function App() {
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
-
-  const theme = createTheme({
-    palette: {
-      mode: light,
-    },
-    typography: {
-      fontFamily: "Metropolis",
-    },
-  });
 
   return (
     <div className="App">
