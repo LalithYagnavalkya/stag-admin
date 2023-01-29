@@ -15,6 +15,7 @@ import {
   FormControl,
   InputAdornment,
   Input,
+  Fab,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -84,19 +85,24 @@ const Home = () => {
           <span className="day-name">{moment().format("dddd")}</span>
           <span className="date-name">{moment().format("MMMM D  yy")}</span>
           <div>
-            <Button
-              sx={{
-                p: 1,
-                borderColor: "white",
-                color: "white",
-                textTransform: "captalize",
-              }}
+            {/* <Button
+              sx={{}}
               onClick={handleOpen}
-              variant="outlined"
+              variant="standard"
               startIcon={<AddIcon />}
             >
               Add Client
-            </Button>
+            </Button> */}
+            <Fab
+              variant="extended"
+              onClick={handleOpen}
+              color="success"
+              aria-label="add"
+            >
+              <AddIcon sx={{ mr: 1 }} />
+              Add Client
+            </Fab>
+
             <Modal
               open={open}
               onClose={handleClose}

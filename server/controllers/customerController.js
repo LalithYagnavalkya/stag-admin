@@ -21,7 +21,7 @@ const createCustomer = async (req, res) => {
       phoneNumber: phoneNumber,
       capital: capital,
       email: email,
-      password: joiningDate,
+      password: "",
       role: "user",
       returns: returns,
       joiningDate: joiningDate,

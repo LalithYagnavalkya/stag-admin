@@ -60,14 +60,15 @@ const AddCustomerModel = ({ handleClose }) => {
   const addClient = (e) => {
     e.preventDefault();
     console.log(client);
-    dispatch(AddCustomer({ token: user.token, customer: client }));
+    if (minReturns !== 0 || maxReturns !== 0) {
+      if (client.capital !== 0 || client.username !== "") {
+        dispatch(AddCustomer({ token: user.token, customer: client }));
+        handleClose();
+      }
+    }
   };
 
   //useEffects section
-  useEffect(() => {
-    console.log(client);
-  }, [client]);
-
   useEffect(() => {
     setClient((prev) => ({
       ...prev,
