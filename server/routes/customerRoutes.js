@@ -12,7 +12,8 @@ const {
 const auth = require("../middleware/auth");
 
 const customerRouter = express.Router();
-// customerRouter.post("/", auth,createCustomer);
+
+customerRouter.post("/createCustomer", auth, createCustomer);
 
 customerRouter.get("/customers", auth, getCustomers);
 

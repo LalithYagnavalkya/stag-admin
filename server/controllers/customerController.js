@@ -1,10 +1,37 @@
 const customerModel = require("../models/customer");
 const csvtojson = require("csvtojson");
 const csvfilepath = "stag.csv";
-const Customer = require("../models/customer");
-
-const createCustomer = (req, res) => {
-  console.log(req.body);
+const User = require("../models/user");
+const moment = require("moment");
+// console.log(moment.now());
+// console.log(moment(1675148359000).format("DD MM YYYY"));
+// console.log(moment(1675148359000).add(2, "month").format("DD MM YYYY"));
+const createCustomer = async (req, res) => {
+  const { username, phoneNumber, capital, returns, joiningDate } = req.body;
+  //jan 28 = feb 28
+  //jan 29 = feb 28
+  //jan 29 = feb 28
+  try {
+    const dueDate = moment(joiningDate).add(1, "month");
+    const result = await User.create({
+      username: username,
+      phoneNumber: phoneNumber,
+      capital: capital,
+      role: "user",
+      returns: returns,
+      joiningDate: joiningDate,
+      previousDueDate: joiningDate,
+      dueDate: dueDate,
+      numberOfMonthsPaid: 0,
+    });
+    console.log(result);
+    return res.status(200).json({ message: "use created successfully" });
+  } catch (err) {
+    console.log(err.message);
+    return res
+      .status(500)
+      .json({ message: "something went wrong", erro: err.message });
+  }
 };
 
 const getCustomers = (req, res) => {

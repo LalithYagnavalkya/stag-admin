@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
-    returns: String,
+    returns: Array,
     transactions: Array,
     role: {
       type: String,
@@ -31,7 +31,15 @@ const userSchema = new mongoose.Schema(
     joiningDate: {
       type: String,
       required: true,
-      default: () => Date.now(),
+    },
+    previousDueDate: {
+      type: String,
+    },
+    dueDate: {
+      type: String,
+    },
+    numberOfMonthsPaid: {
+      type: Number,
     },
     createdAt: {
       type: Date,

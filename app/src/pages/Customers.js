@@ -140,6 +140,7 @@ const CustomerPage = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding-top: 4rem;
   .search-section {
     /* background-color: #e6e7e8; */
     height: 64px;
