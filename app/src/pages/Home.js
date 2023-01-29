@@ -103,15 +103,15 @@ const Home = () => {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <AddCustomerModel />
+              <AddCustomerModel handleClose={handleClose} />
             </Modal>
           </div>
         </div>
         <div className="right-home">
           <span>Due this Week</span>
           <div className="customers-container">
-            {customers.map((customer) => {
-              return <CustomerBar {...customer}></CustomerBar>;
+            {customers?.map((customer, index) => {
+              return <CustomerBar key={index} {...customer}></CustomerBar>;
             })}
           </div>
         </div>

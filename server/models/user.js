@@ -7,19 +7,16 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      // required: true,
       max: 50,
-      // unique: true,
     },
     password: {
       type: String,
-      required: true,
+      // required: true,
     },
     phoneNumber: String,
     capital: {
-      type: Number,
+      type: String,
       required: true,
-      default: 0,
     },
     returns: Array,
     transactions: Array,
@@ -30,6 +27,7 @@ const userSchema = new mongoose.Schema(
     },
     joiningDate: {
       type: String,
+      default: Date.now(),
       required: true,
     },
     previousDueDate: {

@@ -7,16 +7,21 @@ const moment = require("moment");
 // console.log(moment(1675148359000).format("DD MM YYYY"));
 // console.log(moment(1675148359000).add(2, "month").format("DD MM YYYY"));
 const createCustomer = async (req, res) => {
-  const { username, phoneNumber, capital, returns, joiningDate } = req.body;
+  const { customer } = req.body;
+  const { username, phoneNumber, email, capital, role, returns, joiningDate } =
+    customer;
   //jan 28 = feb 28
   //jan 29 = feb 28
   //jan 29 = feb 28
+  console.log(req.body.customer);
   try {
     const dueDate = moment(joiningDate).add(1, "month");
     const result = await User.create({
       username: username,
       phoneNumber: phoneNumber,
       capital: capital,
+      email: email,
+      password: joiningDate,
       role: "user",
       returns: returns,
       joiningDate: joiningDate,

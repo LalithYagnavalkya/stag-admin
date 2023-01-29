@@ -6,7 +6,6 @@ const signup = async (req, res) => {
   const { username, password, role } = req.body;
   console.log(username, password);
   console.log(req.body);
-  console.log("here");
   try {
     const existingAdmin = await adminModel.findOne({ username: username });
     if (existingAdmin) {

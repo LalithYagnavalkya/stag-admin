@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -13,6 +13,9 @@ import {
 } from "@mui/material";
 import { NumericFormat } from "react-number-format";
 import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { AddCustomer } from "../features/customers/customerSlice";
 const style = {
   position: "absolute",
   top: "50%",
@@ -25,8 +28,11 @@ const style = {
   p: 4,
 };
 
-const AddCustomerModel = () => {
-  const currentDate = moment();
+const AddCustomerModel = ({ handleClose }) => {
+  const { user } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+
+  //some custome props for numeric
   const materialUiTextFieldProps = {
     required: true,
     // error: totalAmount > 100000,
@@ -37,94 +43,168 @@ const AddCustomerModel = () => {
       startAdornment: <InputAdornment position="start">₹</InputAdornment>,
     },
   };
-  console.log(currentDate.format("DD MM YYYY"));
+
+  //cons states
+  const [client, setClient] = useState({
+    username: "",
+    phoneNumber: "",
+    email: "",
+    capital: 0,
+    role: "user",
+    returns: [0, 0],
+    joiningDate: moment.unix(),
+  });
+  const [minReturns, setMinReturns] = useState(0);
+  const [maxReturns, setMaxReturns] = useState(0);
+  //handle form submit
+  const addClient = (e) => {
+    e.preventDefault();
+    console.log(client);
+    dispatch(AddCustomer({ token: user.token, customer: client }));
+  };
+
+  //useEffects section
+  useEffect(() => {
+    console.log(client);
+  }, [client]);
+
+  useEffect(() => {
+    setClient((prev) => ({
+      ...prev,
+      returns: [minReturns, maxReturns],
+    }));
+  }, [maxReturns]);
+
+  useEffect(() => {
+    setClient((prev) => ({
+      ...prev,
+      returns: [minReturns, maxReturns],
+    }));
+  }, [minReturns]);
+
   return (
     <Box sx={style}>
-      <Typography id="modal-modal-title" variant="h6" component="h2">
-        Add Client
-      </Typography>
-      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-        <Box sx={{ display: "flex", columnGap: 2 }}>
-          <TextField id="standard-basic" label="Name" variant="standard" />
-          <TextField
-            id="standard-basic"
-            label="Phone number"
-            variant="standard"
-          />
-        </Box>
-        <Box sx={{ display: "flex", columnGap: 2, mt: 2 }}>
-          <TextField
-            fullWidth
-            id="standard-basic"
-            label="Name"
-            variant="standard"
-          />
-        </Box>
-        <Box sx={{ mt: 2 }}>
-          <FormControl fullWidth sx={{ m: 1, mt: 2 }}>
-            <NumericFormat
-              //   value={0}
-              customInput={TextField}
-              onValueChange={() => {}}
-              thousandSeparator=","
-              decimalSeparator="."
-              {...materialUiTextFieldProps}
-            />
-          </FormControl>
-        </Box>
-        <Box
-          sx={{ mt: 2, display: "flex", columnGap: 2, alignItems: "center" }}
-        >
-          <Typography id="modal-modal-title" variant="subtitle2">
-            Returns
-          </Typography>
-          <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-            <InputLabel htmlFor="standard-adornment-amount">Min</InputLabel>
-            <Input
-              id="standard-adornment-amount"
-              startAdornment={
-                <InputAdornment position="start">₹</InputAdornment>
+      <form action="" onSubmit={addClient}>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Add Client
+        </Typography>
+        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <Box sx={{ display: "flex", columnGap: 2 }}>
+            <TextField
+              id="standard-basic"
+              label="Name"
+              variant="standard"
+              onChange={(e) =>
+                setClient((prev) => ({ ...prev, username: e.target.value }))
               }
             />
-          </FormControl>
-          <FormControl fullWidth sx={{ m: 1 }} variant="standard">
-            <InputLabel htmlFor="standard-adornment-amount">Max</InputLabel>
-            <Input
-              id="standard-adornment-amount"
-              startAdornment={
-                <InputAdornment position="start">₹</InputAdornment>
+            <TextField
+              id="standard-basic"
+              label="Phone number"
+              variant="standard"
+              onChange={(e) =>
+                setClient((prev) => ({ ...prev, phoneNumber: e.target.value }))
               }
             />
-          </FormControl>
-        </Box>
-        <Box
-          sx={{
-            mt: 2,
-            display: "flex",
-            columnGap: 2,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {" "}
-          <TextField
-            fullWidth
-            id="date"
-            label="Joining Date"
-            type="date"
-            defaultValue={currentDate.format("DD MM YYYY")}
-            sx={{ width: 220 }}
-            InputLabelProps={{
-              shrink: true,
+          </Box>
+          <Box sx={{ display: "flex", columnGap: 2, mt: 2 }}>
+            <TextField
+              fullWidth
+              id="standard-basic"
+              label="Email"
+              variant="standard"
+              onChange={(e) =>
+                setClient((prev) => ({ ...prev, email: e.target.value }))
+              }
+            />
+          </Box>
+          <Box sx={{ mt: 2 }}>
+            <FormControl fullWidth sx={{ m: 1, mt: 2 }}>
+              <NumericFormat
+                //   value={0}
+                customInput={TextField}
+                onValueChange={() => {}}
+                thousandSeparator=","
+                decimalSeparator="."
+                {...materialUiTextFieldProps}
+                onChange={(e) =>
+                  setClient((prev) => ({ ...prev, capital: e.target.value }))
+                }
+              />
+            </FormControl>
+          </Box>
+          <Box
+            sx={{ mt: 2, display: "flex", columnGap: 2, alignItems: "center" }}
+          >
+            <Typography id="modal-modal-title" variant="subtitle2">
+              Returns
+            </Typography>
+            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+              <InputLabel htmlFor="standard-adornment-amount">Min</InputLabel>
+              <Input
+                id="standard-adornment-amount"
+                startAdornment={
+                  <InputAdornment position="start">%</InputAdornment>
+                }
+                onChange={(e) => {
+                  setMinReturns(e.target.value);
+                  setClient((prev) => ({
+                    ...prev,
+                    returns: [minReturns, maxReturns],
+                  }));
+                }}
+              />
+            </FormControl>
+            <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+              <InputLabel htmlFor="standard-adornment-amount">Max</InputLabel>
+              <Input
+                id="standard-adornment-amount"
+                startAdornment={
+                  <InputAdornment position="start">%</InputAdornment>
+                }
+                onChange={(e) => {
+                  setMaxReturns(e.target.value);
+                  setClient((prev) => ({
+                    ...prev,
+                    returns: [minReturns, maxReturns],
+                  }));
+                }}
+              />
+            </FormControl>
+          </Box>
+          <Box
+            sx={{
+              mt: 2,
+              display: "flex",
+              columnGap: 2,
+              alignItems: "center",
+              justifyContent: "center",
             }}
-          />
+          >
+            {" "}
+            <TextField
+              fullWidth
+              id="date"
+              label="Joining Date"
+              type="date"
+              defaultValue={client.joiningDate}
+              sx={{ width: 220 }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={(e) => {
+                let temptime = moment(e.target.value).unix();
+                setClient((prev) => ({ ...prev, joiningDate: temptime }));
+              }}
+            />
+          </Box>
+        </Typography>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+          <Button variant="contained" color="success" type="submit">
+            Add
+          </Button>
         </Box>
-      </Typography>
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-        <Button variant="contained" color="success">
-          Add
-        </Button>
-      </Box>
+      </form>
     </Box>
   );
 };

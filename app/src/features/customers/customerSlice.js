@@ -27,6 +27,22 @@ export const getAllCustomers = createAsyncThunk(
     }
   }
 );
+export const AddCustomer = createAsyncThunk(
+  "customers/addUser",
+  async (user, thunkAPI) => {
+    try {
+      return await customerServices.AddCustomer(user);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const customerSlice = createSlice({
   name: "customers",
@@ -51,8 +67,22 @@ export const customerSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         state.customers = null;
+      })
+      .addCase(AddCustomer.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(AddCustomer.fulfilled, (state, action) => {
+        state.isLoading = false;
+        // if (state.user !== "") state.isSuccess = true;
+        // state.customers = action.payload;
+      })
+      .addCase(AddCustomer.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.customers = null;
       });
   },
 });
-export const { reset, setUser } = customerSlice.actions;
+export const { setCustomers } = customerSlice.actions;
 export default customerSlice.reducer;
