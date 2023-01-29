@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-
+import moment from "moment";
 // _id(pin):"63bfd8f9852c87c92fbe6bf5"
 // username(pin):"Priya paul"
 // email(pin):""
@@ -19,6 +19,8 @@ const CustomerCard = ({
   capital,
   returns,
   date,
+  phoneNumber,
+  dueDate,
   note,
 }) => {
   return (
@@ -39,7 +41,7 @@ const CustomerCard = ({
         </div>
         <div className="customer-card-field">
           <span className="subfeildhead">Due</span>
-          <span className="subfeildvalue">21 May 2022</span>
+          <span className="subfeildvalue">{dueDate}</span>
         </div>
       </span>
       <span className="customer-card-footer">

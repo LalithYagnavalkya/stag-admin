@@ -18,6 +18,7 @@
     "moment": "^2.29.4",
     "mongoose": "^6.8.3",
     "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.0",
     "nodemon": "^2.0.20",
     "xlsx": "^0.18.5"
   }
