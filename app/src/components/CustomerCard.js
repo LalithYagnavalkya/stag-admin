@@ -28,6 +28,8 @@ const CustomerCard = ({
   var numberCaptial = capital.replace(/\,/g, "");
   numberCaptial = Number(numberCaptial);
   console.log(numberCaptial);
+  const x = (numberCaptial * returns[0]) / 100;
+  const y = (numberCaptial * returns[1]) / 100;
   // const return = (numberCaptial * returns[0]) / 100;
   // setPercentage((prev) => ({...prev, min: (100 * returns[0])/capital})
 
@@ -38,7 +40,10 @@ const CustomerCard = ({
         <div className="customer-card-field">
           <span className="subfeildhead">Amount</span>
           <span className="subfeildvalue">
-            {(numberCaptial * returns[0]) / numberCaptial}
+            {x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+            {returns[1] == 0
+              ? ""
+              : `- ${y.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`}
           </span>
         </div>
         <div className="customer-card-field">
