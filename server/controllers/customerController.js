@@ -16,7 +16,7 @@ const createCustomer = async (req, res) => {
   //jan 29 = feb 28
   console.log(req.body.customer);
   try {
-    const dueDate = moment().add(1, "month");
+    const dueDate = moment(joiningDate).add(1, "month");
     console.log(dueDate);
     const result = await User.create({
       username: username,
