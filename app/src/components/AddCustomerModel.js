@@ -195,7 +195,7 @@ const AddCustomerModel = ({ handleClose }) => {
               }}
               onChange={(e) => {
                 console.log(e.target.value);
-                let temptime = moment(e.target.value).format("DD MM YYYY");
+                let temptime = moment(e.target.value);
 
                 console.log(temptime);
                 setClient((prev) => ({ ...prev, joiningDate: temptime }));

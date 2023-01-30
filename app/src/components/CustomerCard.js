@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import moment from "moment";
 // _id(pin):"63bfd8f9852c87c92fbe6bf5"
@@ -23,25 +23,39 @@ const CustomerCard = ({
   dueDate,
   note,
 }) => {
+  const [percentage, setPercentage] = useState({ min: 0, max: 0 });
+
+  var numberCaptial = capital.replace(/\,/g, "");
+  numberCaptial = Number(numberCaptial);
+  console.log(numberCaptial);
+  // const return = (numberCaptial * returns[0]) / 100;
+  // setPercentage((prev) => ({...prev, min: (100 * returns[0])/capital})
+
   return (
     <CusCard>
       <span className="customer-card-name">{username}</span>
       <span className="customer-feilds">
         <div className="customer-card-field">
           <span className="subfeildhead">Amount</span>
-          <span className="subfeildvalue">14k</span>
+          <span className="subfeildvalue">
+            {(numberCaptial * returns[0]) / numberCaptial}
+          </span>
         </div>
         <div className="customer-card-field">
           <span className="subfeildhead">Capital</span>
-          <span className="subfeildvalue">100k</span>
+          <span className="subfeildvalue">{capital}</span>
         </div>
         <div className="customer-card-field">
           <span className="subfeildhead">Returns</span>
-          <span className="subfeildvalue">14%</span>
+          <span className="subfeildvalue">
+            {returns[0]}% {returns[1] !== 0 && `- ${returns[1]}%`}
+          </span>
         </div>
         <div className="customer-card-field">
           <span className="subfeildhead">Due</span>
-          <span className="subfeildvalue">{dueDate}</span>
+          <span className="subfeildvalue">
+            {moment(dueDate).format("dddd DD/MM/YYYY")}
+          </span>
         </div>
       </span>
       <span className="customer-card-footer">
