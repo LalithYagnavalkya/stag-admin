@@ -3,8 +3,9 @@ const csvtojson = require("csvtojson");
 const csvfilepath = "stag.csv";
 const User = require("../models/user");
 const moment = require("moment");
+const user = require("../models/user");
 // console.log(moment.now());
-// console.log(moment(1675148359000).format("DD MM YYYY"));
+console.log(moment(1672165800).format("DD MM YYYY"));
 // console.log(moment(1675148359000).add(2, "month").format("DD MM YYYY"));
 const createCustomer = async (req, res) => {
   const { customer } = req.body;
@@ -16,6 +17,7 @@ const createCustomer = async (req, res) => {
   console.log(req.body.customer);
   try {
     const dueDate = moment(joiningDate).add(1, "month");
+    console.log(dueDate);
     const result = await User.create({
       username: username,
       phoneNumber: phoneNumber,
@@ -55,7 +57,7 @@ const getCustomers = (req, res) => {
     // } else {
     //   sortBy[sort[0]] = "asc";
     // }
-    customerModel.find({}, (err, docs) => {
+    user.find({ role: "user" }, (err, docs) => {
       if (!err) {
         console.log(docs);
         res.send(docs);
