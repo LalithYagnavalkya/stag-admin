@@ -153,4 +153,7 @@ const HomeStyles = styled.div`
       font-size: 34px;
     }
   }
+  .right-home {
+    display: none;
+  }
 `;
