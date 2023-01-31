@@ -11,28 +11,36 @@ connectDatabase();
 app.listen(process.env.PORT, () => {
   console.log("Server is running on port " + process.env.PORT);
 });
+const today = moment().format("DD");
+console.log(moment("30 01 2023").add("1", "month").format("DD  MM YYYY"));
 
-//function to update due customers everyday.
+// User.find({ _d: "30" }, (err, docs) => {
+//   console.log(docs);
+//   docs.map(async (doc) => {
+//     const newDueDate = moment(doc.dueDate)
+//       .add("1", "month")
+//       .format("DD MM YYYY");
+//     console.log(newDueDate);
 
-// var bulkOp = User.initializeOrderedBulkOp();
-// var count = 0;
-// collection.find().forEach(function (doc) {
-//   bulkOp.find({ _id: doc._id }).updateOne({
-//     $set: { time: new Date(doc.time) },
+//     const result = await User.findOneAndUpdate(
+//       { _id: doc._id },
+//       { isDue: true, previousDueDate: doc.dueDate, dueDate: newDueDate }
+//     );
+//     console.log(result);
 //   });
-//   count++;
-//   if (count % 100 === 0) {
-//     // Execute per 100 operations and re-init
-//     bulkOp.execute();
-//     bulkOp = collection.initializeOrderedBulkOp();
-//   }
 // });
-
-// Clean up queues
-// if (count > 0) {
-// }
-
 // Schedule tasks to be run on the server.
-// cron.schedule("* * * * *", function () {
-//   console.log("running a task every minute");
-// })
+cron.schedule("0 0 * * *", function () {
+  const today = moment().format("DD");
+  User.find({ _d: today.toString() }, (err, docs) => {
+    docs.map(async (doc) => {
+      const newDueDate = moment(doc.previousDueDate).add("1", "month");
+
+      await User.findOneAndUpdate(
+        { _id: doc._id },
+        { isDue: true, previousDueDate: doc.dueDate, dueDate: newDueDate }
+      );
+    });
+  });
+  console.log("running a task every day");
+});
