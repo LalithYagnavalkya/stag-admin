@@ -1,6 +1,7 @@
 const express = require("express");
 const {
   createCustomer,
+  closeDueDate,
   updateCustomer,
   deleteCustomer,
   getCustomer,
@@ -16,6 +17,8 @@ const customerRouter = express.Router();
 customerRouter.post("/createCustomer", auth, createCustomer);
 
 customerRouter.get("/customers", auth, getCustomers);
+
+customerRouter.post("/closeDueDate", auth, closeDueDate);
 
 customerRouter.patch("/:id", auth, getCustomer);
 

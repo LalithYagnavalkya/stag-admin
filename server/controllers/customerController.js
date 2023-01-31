@@ -5,8 +5,20 @@ const User = require("../models/user");
 const moment = require("moment");
 const user = require("../models/user");
 // console.log(moment.now());
-console.log(moment(1672165800).format("DD MM YYYY"));
 // console.log(moment(1675148359000).add(2, "month").format("DD MM YYYY"));
+// console.log(moment("2023-01-15T18:30:00.000Z").format("DD MM YYY"));
+// console.log(moment("2023-01-15T18:30:00.000Z").format("DD"));
+
+//fucntion to add feilds in all docs
+// user.find({}, (err, docs) => {
+//   docs.map(async (doc) => {
+//     await user.findByIdAndUpdate(
+//       { _id: doc._id },
+//       { isDue: false, _d: moment(doc.joiningDate).format("DD") }
+//     );
+//   });
+// });
+
 const createCustomer = async (req, res) => {
   const { customer } = req.body;
   const { username, phoneNumber, email, capital, role, returns, joiningDate } =
@@ -17,7 +29,6 @@ const createCustomer = async (req, res) => {
   console.log(req.body.customer);
   try {
     const dueDate = moment(joiningDate).add(1, "month");
-    console.log(dueDate);
     const result = await User.create({
       username: username,
       phoneNumber: phoneNumber,
@@ -29,6 +40,7 @@ const createCustomer = async (req, res) => {
       joiningDate: joiningDate,
       previousDueDate: joiningDate,
       dueDate: dueDate,
+      _d: moment(joiningDate).format("DD"),
       numberOfMonthsPaid: 0,
     });
     console.log(result);
@@ -73,6 +85,15 @@ const getCustomers = (req, res) => {
   }
 };
 
+const closeDueDate = async (req, res) => {
+  const { id } = req.body;
+  try {
+    const result = await User.findByIdAndUpdate({ _id: id }, { isDue: false });
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 const updateCustomer = (req, res) => {
   console.log(req.body);
   res.send("hello");
@@ -101,6 +122,7 @@ const exportUsers = async (req, res) => {
 
 module.exports = {
   createCustomer,
+  closeDueDate,
   updateCustomer,
   deleteCustomer,
   getCustomer,

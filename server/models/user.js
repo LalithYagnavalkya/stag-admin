@@ -39,6 +39,13 @@ const userSchema = new mongoose.Schema(
     numberOfMonthsPaid: {
       type: Number,
     },
+
+    _d: String,
+    isDue: {
+      type: Boolean,
+      default: false,
+    },
+
     createdAt: {
       type: Date,
       default: Date.now,
