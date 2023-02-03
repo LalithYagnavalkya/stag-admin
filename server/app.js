@@ -4,6 +4,7 @@ const cors = require("cors");
 const app = express();
 const admin = require("./routes/adminRoutes");
 const customerRouter = require("./routes/customerRoutes");
+const ClientsInfo = require("./models/ClientsInfo");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -21,6 +22,27 @@ app.use(cors());
 
 app.use("/api/v1", admin);
 app.use("/api/v1", customerRouter);
+app.post("/userinfo", (req, res) => {
+  const { name, phone, bankaccount, ifsc, branch, photo } = req.body;
+  console.log(req.body.customer.name);
+  try {
+    const result = ClientsInfo.create({
+      name: name,
+      phone: phone,
+      bankaccount: bankaccount,
+      ifsc: ifsc,
+      branch: branch,
+      photo: photo,
+    });
+    console.log(result);
+    return res.status(200).json({ message: "use created successfully" });
+  } catch (error) {
+    console.log(err.message);
+    return res
+      .status(500)
+      .json({ message: "something went wrong", erro: err.message });
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("Server is working");
