@@ -23,8 +23,9 @@ app.use(cors());
 app.use("/api/v1", admin);
 app.use("/api/v1", customerRouter);
 app.post("/userinfo", (req, res) => {
-  const { name, phone, bankaccount, ifsc, branch, photo } = req.body;
-  console.log(req.body.customer.name);
+  const { data } = req.body;
+  const { name, phone, bankaccount, ifsc, branch, photo } = data;
+  console.log(req.body);
   try {
     const result = ClientsInfo.create({
       name: name,
