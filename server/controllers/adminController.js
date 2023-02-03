@@ -1,23 +1,26 @@
-const adminModel = require("../models/user.js");
+const User = require("../models/user.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const moment = require("moment");
 
 const signup = async (req, res) => {
   const { username, password, role } = req.body;
   console.log(username, password);
   console.log(req.body);
   try {
-    const existingAdmin = await adminModel.findOne({ username: username });
+    const existingAdmin = await User.findOne({ username: username });
     if (existingAdmin) {
       return res.status(400).json({ message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const result = await adminModel.create({
+    const result = await User.create({
       password: hashedPassword,
       username: username,
       role: role,
+      capital: 0,
+      joiningDate: moment.now(),
     });
 
     const token = jwt.sign(
@@ -35,7 +38,8 @@ const signin = async (req, res) => {
   const { username, password } = req.body;
   console.log(req.body);
   try {
-    const existingAdmin = await adminModel.findOne({ username: username });
+    const existingAdmin = await User.findOne({ username: username });
+    console.log(existingAdmin);
     if (!existingAdmin) {
       return res.status(404).json({ message: "User not found" });
     }
