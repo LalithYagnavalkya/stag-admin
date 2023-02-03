@@ -9,6 +9,7 @@ const ClientsInfo = require("./models/ClientsInfo");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(cookieParser());
+// app.use(express.bodyParser({ limit: "50mb" }));
 app.use(cors());
 // app.use(
 //   fileUpload({
@@ -23,8 +24,9 @@ app.use(cors());
 app.use("/api/v1", admin);
 app.use("/api/v1", customerRouter);
 app.post("/userinfo", (req, res) => {
-  const { name, phone, bankaccount, ifsc, branch, photo } = req.body;
-  console.log(req.body.customer.name);
+  const { data } = req.body;
+  const { name, phone, bankaccount, ifsc, branch, photo } = data;
+  console.log(req.body);
   try {
     const result = ClientsInfo.create({
       name: name,
