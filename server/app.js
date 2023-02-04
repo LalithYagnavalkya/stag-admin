@@ -5,7 +5,10 @@ const app = express();
 const admin = require("./routes/adminRoutes");
 const customerRouter = require("./routes/customerRoutes");
 const ClientsInfo = require("./models/ClientsInfo");
-
+var corsOptions = {
+  origin: "*",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(cookieParser());
@@ -24,7 +27,7 @@ app.use(cors({ credentials: true, origin: true }));
 
 app.use("/api/v1", admin);
 app.use("/api/v1", customerRouter);
-app.post("/userinfo", (req, res) => {
+app.post("/userinfo", cors(corsOptions), (req, res) => {
   const { data } = req.body;
   const { name, phone, bankaccount, ifsc, branch, photo } = data;
   console.log(req.body);
