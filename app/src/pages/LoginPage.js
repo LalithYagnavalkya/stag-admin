@@ -161,4 +161,18 @@ const LoginStyles = styled.div`
       }
     }
   }
+
+  @media (max-width: 768px) {
+    .login-body {
+      /* display: none; */
+      padding: 0;
+      .login-left-section {
+        width: 100%;
+        flex: 1;
+      }
+      .login-right-section {
+        display: none;
+      }
+    }
+  }
 `;

@@ -3,7 +3,14 @@ import { useSelector } from "react-redux";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { PrivateRoutes } from "./routes/PrivateRoutes";
 
-import { Home, Customers, Profile, LoginPage, SingleCustomer } from "./pages";
+import {
+  Home,
+  Customers,
+  Profile,
+  LoginPage,
+  SingleCustomer,
+  UserInfo,
+} from "./pages";
 import DefaultLayout from "./layout/DefaultLayout";
 function App() {
   const { user } = useSelector((state) => state.auth);
@@ -22,6 +29,7 @@ function App() {
               <Route index path="customers" element={<Customers />}></Route>
               <Route path="customers/:id" element={<SingleCustomer />} />
               <Route path="profile" element={<Profile />} />
+              <Route path="userinfo" element={<UserInfo />} />
             </Route>
           </Route>
           <Route path="/login" element={<LoginPage />} />

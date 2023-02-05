@@ -38,7 +38,7 @@ const AddCustomer = async ({ token, customer }) => {
 const getCustomer = async ({ token, id }) => {
   const updatedToken = "Bearer " + token;
   console.log(id);
-  console.log(token);
+  console.log(updatedToken);
   const response = await baseUrl.get(
     "/getcustomer",
     { id: id },

@@ -85,14 +85,6 @@ const Home = () => {
           <span className="day-name">{moment().format("dddd")}</span>
           <span className="date-name">{moment().format("MMMM D  yy")}</span>
           <div>
-            {/* <Button
-              sx={{}}
-              onClick={handleOpen}
-              variant="standard"
-              startIcon={<AddIcon />}
-            >
-              Add Client
-            </Button> */}
             <Fab
               variant="extended"
               onClick={handleOpen}
@@ -149,11 +141,19 @@ const HomeStyles = styled.div`
     .day-name {
       font-size: 34px;
     }
-    .date-name {
-      font-size: 34px;
-    }
   }
   .right-home {
     display: none;
+  }
+  @media (max-width: 768px) {
+    .left-home {
+      span {
+        font-size: 32px;
+        font-weight: 300;
+      }
+      .day-name {
+        font-size: 14px;
+      }
+    }
   }
 `;

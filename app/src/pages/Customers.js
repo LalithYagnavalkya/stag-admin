@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import CustomerCard from "../components/CustomerCard";
@@ -26,14 +26,14 @@ const Customers = () => {
         borderColor: "#91CBF7",
       },
     [`& .${outlinedInputClasses.input}`]: {
-      color: "green",
+      color: "white",
     },
     [`&:hover .${outlinedInputClasses.input}`]: {
       color: "#91CBF7",
     },
     [`& .${outlinedInputClasses.root}.${outlinedInputClasses.focused} .${outlinedInputClasses.input}`]:
       {
-        color: "#91CBF7",
+        color: "white",
       },
     [`& .${inputLabelClasses.outlined}`]: {
       color: "white",
@@ -59,7 +59,7 @@ const Customers = () => {
         borderColor: "#91CBF7",
       },
     [`& .${outlinedInputClasses.input}`]: {
-      color: "green",
+      color: "white",
     },
     [`&:hover .${outlinedInputClasses.input}`]: {
       color: "#91CBF7",
@@ -78,6 +78,11 @@ const Customers = () => {
       color: "#91CBF7",
     },
   });
+
+  //
+  //
+  //
+  const [filter, setFilter] = useState(20);
 
   useEffect(() => {
     console.log(user.token);
@@ -100,7 +105,8 @@ const Customers = () => {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            // value={age}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
             label="Filter"
             sx={{
               color: "white",
