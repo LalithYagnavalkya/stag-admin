@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import moment from "moment";
+import { Link } from "react-router-dom";
 // _id(pin):"63bfd8f9852c87c92fbe6bf5"
 // username(pin):"Priya paul"
 // email(pin):""
@@ -27,7 +28,6 @@ const CustomerCard = ({
 
   var numberCaptial = capital.replace(/\,/g, "");
   numberCaptial = Number(numberCaptial);
-  console.log(numberCaptial);
   const x = (numberCaptial * returns[0]) / 100;
   const y = (numberCaptial * returns[1]) / 100;
   // const return = (numberCaptial * returns[0]) / 100;
@@ -35,38 +35,43 @@ const CustomerCard = ({
 
   return (
     <CusCard>
-      <span className="customer-card-name">{username}</span>
-      <span className="customer-feilds">
-        <div className="customer-card-field">
-          <span className="subfeildhead">Amount</span>
-          <span className="subfeildvalue">
-            {x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-            {returns[1] == 0
-              ? ""
-              : `- ${y.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`}
-          </span>
-        </div>
-        <div className="customer-card-field">
-          <span className="subfeildhead">Capital</span>
-          <span className="subfeildvalue">{capital}</span>
-        </div>
-        <div className="customer-card-field">
-          <span className="subfeildhead">Returns</span>
-          <span className="subfeildvalue">
-            {returns[0]}% {returns[1] !== 0 && `- ${returns[1]}%`}
-          </span>
-        </div>
-        <div className="customer-card-field">
-          <span className="subfeildhead">Due</span>
-          <span className="subfeildvalue">
-            {moment(dueDate).format("dddd DD/MM/YYYY")}
-          </span>
-        </div>
-      </span>
-      <span className="customer-card-footer">
-        <div className="pending-btn">Pending</div>
-        <div className="card-phone">9959844490</div>
-      </span>
+      <Link
+        style={{ textDecoration: "none", color: "black" }}
+        to={`/app/customers/${_id}`}
+      >
+        <span className="customer-card-name">{username}</span>
+        <span className="customer-feilds">
+          <div className="customer-card-field">
+            <span className="subfeildhead">Amount</span>
+            <span className="subfeildvalue">
+              {x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+              {returns[1] == 0
+                ? ""
+                : `- ${y.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`}
+            </span>
+          </div>
+          <div className="customer-card-field">
+            <span className="subfeildhead">Capital</span>
+            <span className="subfeildvalue">{capital}</span>
+          </div>
+          <div className="customer-card-field">
+            <span className="subfeildhead">Returns</span>
+            <span className="subfeildvalue">
+              {returns[0]}% {returns[1] !== 0 && `- ${returns[1]}%`}
+            </span>
+          </div>
+          <div className="customer-card-field">
+            <span className="subfeildhead">Due</span>
+            <span className="subfeildvalue">
+              {moment(dueDate).format("dddd DD/MM/YYYY")}
+            </span>
+          </div>
+        </span>
+        <span className="customer-card-footer">
+          <div className="pending-btn">Pending</div>
+          <div className="card-phone"></div>
+        </span>
+      </Link>
     </CusCard>
   );
 };
@@ -81,8 +86,13 @@ const CusCard = styled.div`
   padding: 24px;
   border-radius: 4px;
   font-family: "Metropolis";
+  :hover {
+    cursor: pointer;
+    background-color: #d2e2f1;
+  }
 
   .customer-card-name {
+    text-transform: capitalize;
     font-style: normal;
     font-weight: 600;
     font-size: 24px;

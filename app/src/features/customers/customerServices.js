@@ -18,6 +18,7 @@ const getAllCustomers = async ({ token }) => {
 const AddCustomer = async ({ token, customer }) => {
   const updatedToken = "Bearer " + token;
   console.log(customer);
+
   const response = await baseUrl.post(
     "/createCustomer",
     { customer },
@@ -34,8 +35,28 @@ const AddCustomer = async ({ token, customer }) => {
     return response;
   }
 };
+const getCustomer = async ({ token, id }) => {
+  const updatedToken = "Bearer " + token;
+  console.log(id);
+  console.log(token);
+  const response = await baseUrl.get(
+    "/getcustomer",
+    { id: id },
+    {
+      headers: {
+        Authorization: updatedToken,
+      },
+    }
+  );
+  if (response.status == 200) {
+    return response.dpposata;
+  } else {
+    return response;
+  }
+};
 const customerServices = {
   getAllCustomers,
   AddCustomer,
+  getCustomer,
 };
 export default customerServices;

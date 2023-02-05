@@ -45,7 +45,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
+    profilePic: {
+      type: String,
+    },
+    bank_no: {
+      type: String,
+    },
     createdAt: {
       type: Date,
       default: Date.now,

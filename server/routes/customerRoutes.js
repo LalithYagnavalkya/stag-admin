@@ -20,7 +20,7 @@ customerRouter.get("/customers", auth, getCustomers);
 
 customerRouter.post("/closeDueDate", auth, closeDueDate);
 
-customerRouter.patch("/:id", auth, getCustomer);
+customerRouter.get("/getcustomer", auth, getCustomer);
 
 customerRouter.delete("/:id", auth, deleteCustomer);
 

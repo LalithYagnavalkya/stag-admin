@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import CustomerCard from "../components/CustomerCard";
 import { FormControl, Grid, MenuItem, Select, TextField } from "@mui/material";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import InputLabel, { inputLabelClasses } from "@mui/material/InputLabel";
+import { useDispatch } from "react-redux";
+import { getAllCustomers } from "../features/customers/customerSlice";
 
 const Customers = () => {
+  const { user } = useSelector((store) => store.auth);
   const { customers } = useSelector((store) => store.customers);
+  const dispatch = useDispatch();
   const StyledTextField = styled(TextField)({
     [`& .${outlinedInputClasses.root} .${outlinedInputClasses.notchedOutline}`]:
       {
@@ -74,6 +78,12 @@ const Customers = () => {
       color: "#91CBF7",
     },
   });
+
+  useEffect(() => {
+    console.log(user.token);
+    dispatch(getAllCustomers({ token: user.token }));
+  }, []);
+
   return (
     <CustomerPage>
       <div className="search-section">
