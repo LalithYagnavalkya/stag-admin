@@ -39,7 +39,7 @@ const getCustomer = async ({ token, id }) => {
   const updatedToken = "Bearer " + token;
   console.log(id);
   console.log(updatedToken);
-  const response = await baseUrl.get(
+  const response = await baseUrl.post(
     "/getcustomer",
     { id: id },
     {
@@ -49,7 +49,8 @@ const getCustomer = async ({ token, id }) => {
     }
   );
   if (response.status == 200) {
-    return response.dpposata;
+    console.log(response.data);
+    return response.data;
   } else {
     return response;
   }

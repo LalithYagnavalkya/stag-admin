@@ -106,24 +106,24 @@ const updateCustomer = (req, res) => {
 const deleteCustomer = (req, res) => {};
 
 const getCustomer = (req, res) => {
-  // const { id } = req.body;
+  const { id } = req.body;
   console.log(req.body);
 
   console.log("get customer triggered");
-  // try {
-  //   User.findById({ _id: id }, (err, docs) => {
-  //     if (!err) {
-  //       console.log(docs);
-  //       res.send(docs);
-  //     } else {
-  //       console.log(err);
-  //       throw err;
-  //     }
-  //   });
-  // } catch (error) {
-  //   console.log(err);
-  //   res.status(500).json({ message: err.mess });
-  // }
+  try {
+    User.findById({ _id: id }, { password: 0 }, (err, docs) => {
+      if (!err) {
+        console.log(docs);
+        res.send(docs);
+      } else {
+        console.log(err);
+        throw err;
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err.mess });
+  }
 };
 const updateReturns = (req, res) => {};
 const updateCapital = (req, res) => {};

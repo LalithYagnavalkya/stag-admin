@@ -12,12 +12,13 @@ import {
   UserInfo,
 } from "./pages";
 import DefaultLayout from "./layout/DefaultLayout";
+import styled from "styled-components";
 function App() {
   const { user } = useSelector((state) => state.auth);
   const location = useLocation();
 
   return (
-    <div className="App">
+    <AppStyles>
       <AnimatePresence>
         <Routes location={location} key={location.pathname}>
           <Route exact path="/" element={<PrivateRoutes />}>
@@ -39,8 +40,12 @@ function App() {
           />
         </Routes>
       </AnimatePresence>
-    </div>
+    </AppStyles>
   );
 }
 
 export default App;
+const AppStyles = styled.div`
+  width: 100%;
+  background-color: white;
+`;
