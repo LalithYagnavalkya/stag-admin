@@ -10,20 +10,9 @@ var corsOptions = {
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-// app.use(cookieParser());
-// app.use(express.bodyParser({ limit: "50mb" }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb" }));
 app.use(cors({ credentials: true, origin: true }));
-
-// app.use(
-//   fileUpload({
-//     limits: { fileSize: 50 * 1024 * 1024 },
-//     useTempFiles: true,
-//   })
-// );
-
-//stati folder path
-// app.use(express.static(path.resolve(__dirname, "public")));
 
 app.use("/api/v1", admin);
 app.use("/api/v1", customerRouter);

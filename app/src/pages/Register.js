@@ -8,6 +8,8 @@ import {
 } from "@mui/material/styles";
 import FileBase64 from "react-file-base64";
 import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import axios from "axios";
 
 const Register = () => {
@@ -108,117 +110,122 @@ const Register = () => {
   }, [confimbank, data.bankaccount]);
 
   return (
-    <ThemeProvider theme={theme}>
-      <RegisterStyles>
-        <Box sx={{}}>
-          <Typography variant="h2" gutterBottom>
-            Welcome to Stag Investments
-          </Typography>
-          <Container maxWidth="sm">
-            <Box sx={{ mt: 5 }}>
-              <TextField
-                error={false}
-                autoComplete="off"
-                id="standard-basic"
-                fullWidth
-                label="Full Name as per bank account"
-                variant="outlined"
-                margin="dense"
-                value={data.name}
-                onChange={(e) =>
-                  setData((prev) => ({ ...prev, name: e.target.value }))
-                }
-              />
-              <TextField
-                error={false}
-                fullWidth
-                id="standard-basic"
-                label="Phone Number"
-                variant="outlined"
-                margin="dense"
-                value={data.phone}
-                onChange={(e) =>
-                  setData((prev) => ({ ...prev, phone: e.target.value }))
-                }
-              />
-              <TextField
-                margin="dense"
-                fullWidth
-                id="standard-basic"
-                label="Bank account number"
-                variant="outlined"
-                value={data.bankaccount}
-                onChange={(e) => {
-                  setData((prev) => ({ ...prev, bankaccount: e.target.value }));
+    <>
+      <ThemeProvider theme={theme}>
+        <RegisterStyles>
+          <Box sx={{}}>
+            <Typography variant="h2" gutterBottom>
+              Welcome to Stag Investments
+            </Typography>
+            <Container maxWidth="sm">
+              <Box sx={{ mt: 5 }}>
+                <TextField
+                  error={false}
+                  autoComplete="off"
+                  id="standard-basic"
+                  fullWidth
+                  label="Full Name as per bank account"
+                  variant="outlined"
+                  margin="dense"
+                  value={data.name}
+                  onChange={(e) =>
+                    setData((prev) => ({ ...prev, name: e.target.value }))
+                  }
+                />
+                <TextField
+                  error={false}
+                  fullWidth
+                  id="standard-basic"
+                  label="Phone Number"
+                  variant="outlined"
+                  margin="dense"
+                  value={data.phone}
+                  onChange={(e) =>
+                    setData((prev) => ({ ...prev, phone: e.target.value }))
+                  }
+                />
+                <TextField
+                  margin="dense"
+                  fullWidth
+                  id="standard-basic"
+                  label="Bank account number"
+                  variant="outlined"
+                  value={data.bankaccount}
+                  onChange={(e) => {
+                    setData((prev) => ({
+                      ...prev,
+                      bankaccount: e.target.value,
+                    }));
+                  }}
+                />
+                <TextField
+                  margin="dense"
+                  fullWidth
+                  error={isbankError}
+                  id="standard-basic"
+                  label="Confirm Bank account number"
+                  variant="outlined"
+                  value={confimbank}
+                  onChange={(e) => {
+                    setConfirmBank(e.target.value);
+                  }}
+                />
+                <TextField
+                  margin="dense"
+                  fullWidth
+                  id="standard-basic"
+                  label="IFSC"
+                  variant="outlined"
+                  value={data.ifsc}
+                  onChange={(e) => {
+                    setData((prev) => ({ ...prev, ifsc: e.target.value }));
+                  }}
+                />
+                <TextField
+                  margin="dense"
+                  fullWidth
+                  id="standard-basic"
+                  label="Branch"
+                  variant="outlined"
+                  value={data.branch}
+                  onChange={(e) =>
+                    setData((prev) => ({ ...prev, branch: e.target.value }))
+                  }
+                />
+              </Box>
+              <Box
+                textAlign="center"
+                sx={{
+                  mt: 1.4,
+                  display: "flex",
+                  justifyContent: "center",
+                  columnGap: "1rem",
                 }}
-              />
-              <TextField
-                margin="dense"
-                fullWidth
-                error={isbankError}
-                id="standard-basic"
-                label="Confirm Bank account number"
-                variant="outlined"
-                value={confimbank}
-                onChange={(e) => {
-                  setConfirmBank(e.target.value);
-                }}
-              />
-              <TextField
-                margin="dense"
-                fullWidth
-                id="standard-basic"
-                label="IFSC"
-                variant="outlined"
-                value={data.ifsc}
-                onChange={(e) => {
-                  setData((prev) => ({ ...prev, ifsc: e.target.value }));
-                }}
-              />
-              <TextField
-                margin="dense"
-                fullWidth
-                id="standard-basic"
-                label="Branch"
-                variant="outlined"
-                value={data.branch}
-                onChange={(e) =>
-                  setData((prev) => ({ ...prev, branch: e.target.value }))
-                }
-              />
-            </Box>
-            <Box
-              textAlign="center"
-              sx={{
-                mt: 1.4,
-                display: "flex",
-                justifyContent: "center",
-                columnGap: "1rem",
-              }}
-            >
-              Upload Your Photo
-              <FileBase64
-                multiple={true}
-                onDone={(e) =>
-                  setData((prev) => ({ ...prev, photo: e[0].base64 }))
-                }
-              />
-            </Box>
-            <Box textAlign={"center"}>
-              <Button
-                sx={{ mt: 1.5, justifyContent: "center" }}
-                variant="contained"
-                color="success"
-                onClick={sumbitHandler}
               >
-                Save
-              </Button>
-            </Box>
-          </Container>
-        </Box>
-        <ToastContainer position="bottom-right" pauseOnHover theme="dark" />
-      </RegisterStyles>
-    </ThemeProvider>
+                Upload Your Photo
+                <FileBase64
+                  multiple={true}
+                  onDone={(e) =>
+                    setData((prev) => ({ ...prev, photo: e[0].base64 }))
+                  }
+                />
+              </Box>
+              <Box textAlign={"center"}>
+                <Button
+                  sx={{ mt: 1.5, justifyContent: "center" }}
+                  variant="contained"
+                  color="success"
+                  onClick={sumbitHandler}
+                >
+                  Save
+                </Button>
+              </Box>
+            </Container>
+          </Box>
+        </RegisterStyles>
+      </ThemeProvider>
+      <ToastContainer position="bottom-right" pauseOnHover theme="dark" />
+    </>
   );
 };
 
