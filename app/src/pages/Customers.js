@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import CustomerCard from "../components/CustomerCard";
 import { FormControl, Grid, MenuItem, Select, TextField } from "@mui/material";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import InputLabel, { inputLabelClasses } from "@mui/material/InputLabel";
+import { useDispatch } from "react-redux";
+import { getAllCustomers } from "../features/customers/customerSlice";
 
 const Customers = () => {
+  const { user } = useSelector((store) => store.auth);
   const { customers } = useSelector((store) => store.customers);
+  const dispatch = useDispatch();
   const StyledTextField = styled(TextField)({
     [`& .${outlinedInputClasses.root} .${outlinedInputClasses.notchedOutline}`]:
       {
@@ -22,14 +26,14 @@ const Customers = () => {
         borderColor: "#91CBF7",
       },
     [`& .${outlinedInputClasses.input}`]: {
-      color: "green",
+      color: "white",
     },
     [`&:hover .${outlinedInputClasses.input}`]: {
       color: "#91CBF7",
     },
     [`& .${outlinedInputClasses.root}.${outlinedInputClasses.focused} .${outlinedInputClasses.input}`]:
       {
-        color: "#91CBF7",
+        color: "white",
       },
     [`& .${inputLabelClasses.outlined}`]: {
       color: "white",
@@ -55,7 +59,7 @@ const Customers = () => {
         borderColor: "#91CBF7",
       },
     [`& .${outlinedInputClasses.input}`]: {
-      color: "green",
+      color: "white",
     },
     [`&:hover .${outlinedInputClasses.input}`]: {
       color: "#91CBF7",
@@ -74,6 +78,17 @@ const Customers = () => {
       color: "#91CBF7",
     },
   });
+
+  //
+  //
+  //
+  const [filter, setFilter] = useState(20);
+
+  useEffect(() => {
+    console.log(user.token);
+    dispatch(getAllCustomers({ token: user.token }));
+  }, []);
+
   return (
     <CustomerPage>
       <div className="search-section">
@@ -90,7 +105,8 @@ const Customers = () => {
           <Select
             labelId="demo-simple-select-label"
             id="demo-simple-select"
-            // value={age}
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
             label="Filter"
             sx={{
               color: "white",

@@ -1,6 +1,10 @@
+import { Button } from "@mui/material";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+
+// this navbar is not used
+// go to defaultlayout.js where the actual navbar has been written
 
 const Navbar = () => {
   return (
@@ -29,12 +33,14 @@ const Navbar = () => {
           </NavLink>
         </span>
         <span>
-          <NavLink
+          <Button variant="outlined"> Logout </Button>
+          {/* <NavLink
+
             style={{ textDecoration: "none", color: "#FFFFFF" }}
             to={"/app/profile"}
           >
             Profile
-          </NavLink>
+          </NavLink> */}
         </span>
       </div>
     </NavWrapper>

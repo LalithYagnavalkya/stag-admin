@@ -116,7 +116,12 @@ export default function DrawerAppBar(props) {
       </Box>
       <Box
         component="main"
-        sx={{ p: 0, minHeight: "100%", backgroundColor: "#1E1E1E" }}
+        sx={{
+          p: 0,
+          minHeight: "100%",
+          width: "100%",
+          backgroundColor: "#1E1E1E",
+        }}
       >
         <Outlet></Outlet>
       </Box>

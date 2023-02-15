@@ -3,6 +3,7 @@ import customerServices from "./customerServices";
 
 const initialState = {
   customers: [],
+  currentCustomer: {},
   filter: "",
   isError: false,
   isSuccess: false,
@@ -32,6 +33,24 @@ export const AddCustomer = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       return await customerServices.AddCustomer(user);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const GetCustomer = createAsyncThunk(
+  "customer/getCustomer",
+  async (user, thunkAPI) => {
+    try {
+      console.log("get customer triggered");
+      return await customerServices.getCustomer(user);
     } catch (error) {
       const message =
         (error.response &&
@@ -77,6 +96,21 @@ export const customerSlice = createSlice({
         // state.customers = action.payload;
       })
       .addCase(AddCustomer.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.customers = null;
+      })
+      .addCase(GetCustomer.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(GetCustomer.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.currentCustomer = action.payload;
+        // if (state.user !== "") state.isSuccess = true;
+        // state.customers = action.payload;
+      })
+      .addCase(GetCustomer.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
