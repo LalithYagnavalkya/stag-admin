@@ -38,7 +38,11 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route
             path="*"
-            element={<Navigate to={user === null ? "/login" : `/app/home`} />}
+            element={
+              <Navigate
+                to={user === null ? "/login" || "/register" : `/app/home`}
+              />
+            }
           />
         </Routes>
       </AnimatePresence>
