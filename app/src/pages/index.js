@@ -4,4 +4,13 @@ import Profile from "./Profile";
 import LoginPage from "./LoginPage";
 import SingleCustomer from "./SingleCustomer";
 import UserInfo from "./Userinfo";
-export { Customers, SingleCustomer, Home, Profile, LoginPage, UserInfo };
+import Register from "./Register";
+export {
+  Customers,
+  SingleCustomer,
+  Home,
+  Profile,
+  LoginPage,
+  UserInfo,
+  Register,
+};

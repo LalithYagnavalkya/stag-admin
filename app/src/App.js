@@ -10,6 +10,7 @@ import {
   LoginPage,
   SingleCustomer,
   UserInfo,
+  Register,
 } from "./pages";
 import DefaultLayout from "./layout/DefaultLayout";
 import styled from "styled-components";
@@ -33,6 +34,7 @@ function App() {
               <Route path="userinfo" element={<UserInfo />} />
             </Route>
           </Route>
+          <Route path="/register" element={<Register />} />
           <Route path="/login" element={<LoginPage />} />
           <Route
             path="*"
