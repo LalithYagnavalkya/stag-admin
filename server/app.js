@@ -20,6 +20,7 @@ app.post("/userinfo", cors(corsOptions), (req, res) => {
   const { data } = req.body;
   const { name, phone, bankaccount, ifsc, branch, photo } = data;
   console.log(req.body);
+  console.log("this is register");
   try {
     const result = ClientsInfo.create({
       name: name,
