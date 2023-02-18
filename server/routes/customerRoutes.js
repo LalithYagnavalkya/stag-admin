@@ -9,6 +9,7 @@ const {
   updateReturns,
   updateCapital,
   exportUsers,
+  getClinetReqs,
 } = require("../controllers/customerController");
 const auth = require("../middleware/auth");
 
@@ -17,6 +18,8 @@ const customerRouter = express.Router();
 customerRouter.post("/createCustomer", auth, createCustomer);
 
 customerRouter.get("/customers", auth, getCustomers);
+
+customerRouter.get("/getclientreqs", auth, getClinetReqs);
 
 customerRouter.post("/closeDueDate", auth, closeDueDate);
 

@@ -9,4 +9,4 @@ const ClientInfoSchema = new mongoose.Schema({
   approved: { type: Boolean, default: false },
 });
 
-module.exports = mongoose.model("client", ClientInfoSchema);
+module.exports = mongoose.model("clientReqs", ClientInfoSchema);

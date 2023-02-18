@@ -4,6 +4,8 @@ const csvfilepath = "stag.csv";
 const User = require("../models/user");
 const moment = require("moment");
 const user = require("../models/user");
+const ClientReqs = require("../models/ClientsInfo");
+
 // console.log(moment.now());
 // console.log(moment(1675148359000).add(2, "month").format("DD MM YYYY"));
 // console.log(moment("2023-01-15T18:30:00.000Z").format("DD MM YYY"));
@@ -75,10 +77,9 @@ const getCustomers = (req, res) => {
       (err, docs) => {
         if (!err) {
           // console.log(docs);
-          res.send(docs);
+          res.status(200).json(docs);
         } else {
           console.log(err);
-          // process.exit(1);
           throw err;
         }
       }
@@ -88,7 +89,21 @@ const getCustomers = (req, res) => {
     console.log(err);
   }
 };
-
+const getClinetReqs = (req, res) => {
+  try {
+    ClientReqs.find({}, (err, docs) => {
+      if (!err) {
+        res.status(200).json(docs);
+      } else {
+        console.log(err);
+      }
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "something went wrong", erro: err.message });
+  }
+};
 const closeDueDate = async (req, res) => {
   const { id } = req.body;
   try {
@@ -153,4 +168,5 @@ module.exports = {
   updateReturns,
   updateCapital,
   exportUsers,
+  getClinetReqs,
 };

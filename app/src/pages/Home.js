@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import moment, { now } from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllCustomers } from "../features/customers/customerSlice";
+import { getAllCustomers, getReqs } from "../features/customers/customerSlice";
 import {
   Box,
   Typography,
@@ -36,7 +36,7 @@ const style = {
 
 const Home = () => {
   const { user } = useSelector((state) => state.auth);
-  const { customers } = useSelector((store) => store.customers);
+  const { customers, reqs } = useSelector((store) => store.customers);
 
   const [time, setTime] = useState(new Date());
   const dispatch = useDispatch();
@@ -47,6 +47,7 @@ const Home = () => {
   useEffect(() => {
     console.log(user.token);
     dispatch(getAllCustomers({ token: user.token }));
+    dispatch(getReqs({ token: user.token }));
   }, []);
 
   useEffect(() => {
@@ -108,8 +109,12 @@ const Home = () => {
         <div className="right-home">
           <span>Due this Week</span>
           <div className="customers-container">
-            {customers?.map((customer, index) => {
-              return <CustomerBar key={index} {...customer}></CustomerBar>;
+            {reqs?.map((customer, index) => {
+              return (
+                <CustomerBar key={index} {...customer}>
+                  s
+                </CustomerBar>
+              );
             })}
           </div>
         </div>
@@ -143,7 +148,7 @@ const HomeStyles = styled.div`
     }
   }
   .right-home {
-    display: none;
+    /* display: none; */
   }
   @media (max-width: 768px) {
     .left-home {

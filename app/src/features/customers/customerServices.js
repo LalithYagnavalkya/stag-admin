@@ -55,9 +55,25 @@ const getCustomer = async ({ token, id }) => {
     return response;
   }
 };
+const getReqs = async ({ token }) => {
+  const updatedToken = "Bearer " + token;
+  const response = await baseUrl.get("/getclientreqs", {
+    headers: {
+      Authorization: updatedToken,
+    },
+  });
+  // console.log(token);
+  if (response.status == 200) {
+    console.log(response);
+    return response.data;
+  } else {
+    return response;
+  }
+};
 const customerServices = {
   getAllCustomers,
   AddCustomer,
   getCustomer,
+  getReqs,
 };
 export default customerServices;

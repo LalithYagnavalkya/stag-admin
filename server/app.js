@@ -16,13 +16,14 @@ app.use(cors({ credentials: true, origin: true }));
 
 app.use("/api/v1", admin);
 app.use("/api/v1", customerRouter);
-app.post("/userinfo", cors(corsOptions), (req, res) => {
+
+app.post("/userinfo", cors(corsOptions), async (req, res) => {
   const { data } = req.body;
   const { name, phone, bankaccount, ifsc, branch, photo } = data;
   console.log(req.body);
   console.log("this is register");
   try {
-    const result = ClientsInfo.create({
+    const result = await ClientsInfo.create({
       name: name,
       phone: phone,
       bankaccount: bankaccount,
@@ -31,7 +32,7 @@ app.post("/userinfo", cors(corsOptions), (req, res) => {
       photo: photo,
     });
     console.log(result);
-    return res.status(200).json({ message: "use created successfully" });
+    return res.status(200).json({ message: "user created successfully" });
   } catch (error) {
     console.log(err.message);
     return res
