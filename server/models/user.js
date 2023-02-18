@@ -20,6 +20,13 @@ const userSchema = new mongoose.Schema(
     },
     returns: Array,
     transactions: Array,
+    bankaccount: String,
+    ifsc: String,
+    branch: String,
+    approved: {
+      type: Boolean,
+      default: true,
+    },
     role: {
       type: String,
       enum: ["user", "admin"],

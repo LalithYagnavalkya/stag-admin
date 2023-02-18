@@ -22,33 +22,30 @@ const ClientReqs = require("../models/ClientsInfo");
 // });
 
 const createCustomer = async (req, res) => {
-  const { customer } = req.body;
-  const { username, phoneNumber, email, capital, role, returns, joiningDate } =
-    customer;
-  //jan 28 = feb 28
-  //jan 29 = feb 28
-  //jan 29 = feb 28
-  console.log(req.body.customer);
+  const { id, returns, capital } = req.body;
   try {
-    const dueDate = moment(joiningDate).add(1, "month");
+    // const dueDate = moment(joiningDate).add(1, "month");
+    const clientData = await ClientReqs.findOne({ _id: id })
+    const { name, phone, bankaccount, ifsc, branch, photo } = clientData;
     const result = await User.create({
-      username: username,
-      phoneNumber: phoneNumber,
+      username: name,
+      phoneNumber: phone,
       capital: capital,
-      email: email,
+      email: "",
       password: "",
       role: "user",
       returns: returns,
-      joiningDate: joiningDate,
-      previousDueDate: joiningDate,
-      dueDate: dueDate,
+      bankaccount,
+      ifsc,
+      branch,
+      profilePic: photo,
       _d: moment(joiningDate).format("DD"),
       numberOfMonthsPaid: 0,
     });
-    console.log(result);
+    console.log("CLIENT_REQ", name);
     return res.status(200).json({ message: "use created successfully" });
   } catch (err) {
-    console.log(err.message);
+    // console.log(err.message);
     return res
       .status(500)
       .json({ message: "something went wrong", erro: err.message });
@@ -57,34 +54,37 @@ const createCustomer = async (req, res) => {
 
 const getCustomers = (req, res) => {
   try {
-    const page = parseInt(req.query.page) - 1 || 0;
-    const limit = req.query.search || 5;
-    const search = req.query.search || "";
-    const sort = req.query.sort || "due";
+    const { query, filter } = req.body;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 20;
 
-    // req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
-    // req.sort = {};
+    let isDue;
+    if (filter === 'paidUser') {
+      isDue = false;
+    } else if (filter === 'due') {
+      isDue = true;
+    } else if (filter === 'all') {
+      isDue = { $exists: true };
+    } else {
+      // Handle case where filter is invalid or not provided
+      res.status(400).json({ error: 'Invalid filter' });
+      return;
+    }
 
-    // let sortBy = {};
-    // if (sort[1]) {
-    //   sortBy[sort[0]] = sort[1];
-    // } else {
-    //   sortBy[sort[0]] = "asc";
-    // }
-    user.find(
-      { role: "user" },
+    const foundQuery = user.find(
+      { role: 'user', username: new RegExp(query, 'i'), isDue },
       { username: 1, capital: 1, returns: 1, dueDate: 1 },
       (err, docs) => {
         if (!err) {
-          // console.log(docs);
+          console.log(docs);
           res.status(200).json(docs);
         } else {
           console.log(err);
-          throw err;
+          res.status(500).json({ error: 'Internal server error' });
         }
       }
-    );
-    // res.status(200).json()
+    ).skip((page - 1) * limit).limit(limit);
+    res.status(200).json(foundQuery)
   } catch (err) {
     console.log(err);
   }
@@ -118,7 +118,7 @@ const updateCustomer = (req, res) => {
   res.send("hello");
 };
 
-const deleteCustomer = (req, res) => {};
+const deleteCustomer = (req, res) => { };
 
 const getCustomer = (req, res) => {
   const { id } = req.body;
@@ -140,8 +140,8 @@ const getCustomer = (req, res) => {
     res.status(500).json({ message: err.mess });
   }
 };
-const updateReturns = (req, res) => {};
-const updateCapital = (req, res) => {};
+const updateReturns = (req, res) => { };
+const updateCapital = (req, res) => { };
 
 const exportUsers = async (req, res) => {
   csvtojson()
