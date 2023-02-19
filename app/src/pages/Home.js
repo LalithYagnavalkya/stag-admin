@@ -22,6 +22,8 @@ import AddIcon from "@mui/icons-material/Add";
 import CustomerBar from "../components/CustomerBar";
 import { NumericFormat } from "react-number-format";
 import { AddCustomerModel } from "../components/";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const style = {
   position: "absolute",
   top: "50%",
@@ -36,14 +38,17 @@ const style = {
 
 const Home = () => {
   const { user } = useSelector((state) => state.auth);
-  const { customers, reqs } = useSelector((store) => store.customers);
+  const { customers, reqs, isLoading, message, isError, isClientReqDeleted } =
+    useSelector((store) => store.customers);
 
   const [time, setTime] = useState(new Date());
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
+  const [openDeleteUser, setOpenDeleteUser] = React.useState(false);
+  const handleOpenDelete = () => setOpenDeleteUser(true);
+  const handleCloseDelete = () => setOpenDeleteUser(false);
   useEffect(() => {
     console.log(user.token);
     dispatch(getAllCustomers({ token: user.token }));
@@ -56,16 +61,7 @@ const Home = () => {
       setTime(nwDate);
     }, 60000);
   }, []);
-  const materialUiTextFieldProps = {
-    required: true,
-    // error: totalAmount > 100000,
-    fullWidth: true,
-    label: "Total Amount",
-    variant: "standard",
-    InputProps: {
-      startAdornment: <InputAdornment position="start">₹</InputAdornment>,
-    },
-  };
+
   return (
     <HomeStyles>
       <Box
@@ -107,18 +103,22 @@ const Home = () => {
           </div>
         </div>
         <div className="right-home">
-          <span>Due this Week</span>
+          <span className="right-home-name">Requests</span>
           <div className="customers-container">
             {reqs?.map((customer, index) => {
               return (
-                <CustomerBar key={index} {...customer}>
-                  s
-                </CustomerBar>
+                <CustomerBar
+                  key={index}
+                  {...customer}
+                  // handleOpenDelete={handleOpenDelete}
+                  // handleCloseDelete={handleCloseDelete}
+                ></CustomerBar>
               );
             })}
           </div>
         </div>
       </Box>
+      <ToastContainer position="bottom-right" theme="colored" />
     </HomeStyles>
   );
 };
@@ -131,7 +131,7 @@ const HomeStyles = styled.div`
   color: white;
   width: 100vw;
   display: flex;
-  overflow: hidden;
+  overflow-x: hidden;
   .left-home {
     display: flex;
     padding-top: 5rem;
@@ -149,6 +149,32 @@ const HomeStyles = styled.div`
   }
   .right-home {
     /* display: none; */
+    padding-top: 5rem;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    .customers-container {
+      display: flex;
+      flex-direction: column;
+      row-gap: 1rem;
+      height: 80%;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      padding: 1rem;
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    .right-home-name {
+      font-family: "Metropolis";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 32px;
+      line-height: 69.84%;
+      letter-spacing: -0.02em;
+      color: #d6d6d6;
+    }
   }
   @media (max-width: 768px) {
     .left-home {

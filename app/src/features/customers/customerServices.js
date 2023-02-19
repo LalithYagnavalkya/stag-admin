@@ -62,10 +62,27 @@ const getReqs = async ({ token }) => {
       Authorization: updatedToken,
     },
   });
-  // console.log(token);
   if (response.status == 200) {
     console.log(response);
     return response.data;
+  } else {
+    return response;
+  }
+};
+const deleteReq = async ({ token, _id }) => {
+  const updatedToken = "Bearer " + token;
+
+  const response = await baseUrl.post(
+    "/deletereq",
+    { _id },
+    {
+      headers: {
+        Authorization: updatedToken,
+      },
+    }
+  );
+  if (response.status == 200) {
+    return response.data._id;
   } else {
     return response;
   }
@@ -75,5 +92,6 @@ const customerServices = {
   AddCustomer,
   getCustomer,
   getReqs,
+  deleteReq,
 };
 export default customerServices;

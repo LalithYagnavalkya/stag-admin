@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 import customerServices from "./customerServices";
 
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  isClientReqDeleted: false,
 };
 
 export const getAllCustomers = createAsyncThunk(
@@ -81,6 +83,23 @@ export const GetCustomer = createAsyncThunk(
   }
 );
 
+export const DeleteClinetReq = createAsyncThunk(
+  "customer/deleteReq",
+  async (user, thunkAPI) => {
+    try {
+      console.log("Delete Customer triggered");
+      return await customerServices.deleteReq(user);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const customerSlice = createSlice({
   name: "customers",
   initialState,
@@ -147,6 +166,21 @@ export const customerSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         state.customers = null;
+      })
+      .addCase(DeleteClinetReq.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(DeleteClinetReq.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.reqs = state.reqs.filter((req) => req._id !== action.payload);
+        toast.success("hello suc");
+        state.isClientReqDeleted = true;
+      })
+      .addCase(DeleteClinetReq.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isClientReqDeleted = false;
+        toast.error("somethinfg went wrong");
       });
   },
 });
