@@ -10,10 +10,15 @@ const {
   updateCapital,
   exportUsers,
   getClinetReqs,
+  loginCustomer,
+  verifyPhoneOtp,
 } = require("../controllers/customerController");
 const auth = require("../middleware/auth");
 
 const customerRouter = express.Router();
+//actual customers
+customerRouter.post('/login_with_phone', loginCustomer)
+customerRouter.post('/verify_phone_otp', verifyPhoneOtp)
 
 customerRouter.post("/createCustomer", auth, createCustomer);
 

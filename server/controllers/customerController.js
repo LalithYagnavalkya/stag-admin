@@ -5,7 +5,18 @@ const User = require("../models/user");
 const moment = require("moment");
 const user = require("../models/user");
 const ClientReqs = require("../models/ClientsInfo");
-
+const jwt = require('jsonwebtoken')
+const twilio = require('twilio');
+const generateOTP = (otp_length) => {
+  // Declare a digits variable
+  // which stores all digits
+  var digits = "0123456789";
+  let OTP = "";
+  for (let i = 0; i < otp_length; i++) {
+    OTP += digits[Math.floor(Math.random() * 10)];
+  }
+  return OTP;
+};
 // console.log(moment.now());
 // console.log(moment(1675148359000).add(2, "month").format("DD MM YYYY"));
 // console.log(moment("2023-01-15T18:30:00.000Z").format("DD MM YYY"));
@@ -20,7 +31,69 @@ const ClientReqs = require("../models/ClientsInfo");
 //     );
 //   });
 // });
+const loginCustomer = async (req, res) => {
+  try {
+    const { mobileNumber } = req.body
+    const foundMobileNumber = await User.findOne({ phoneNumber: mobileNumber });
+    if (!foundMobileNumber) {
+      res.status(404).json({ message: "phone number not found" })
+      return;
+    }
+    const otp = generateOTP(6)
+    const message = `Your OTP is ${otp}`
+    foundMobileNumber.phoneOtp = otp;
+    await foundMobileNumber.save();
+    const client = new twilio(process.env.ACCOUTN_SID, process.env.AUTH_TOKEN)
+    client.messages.create({
+      body: message,
+      to: foundMobileNumber.phoneNumber,
+      from: '+12532451940'
+    }).then(resp =>
+      res.status(201).json({
+        message: "OTP sended to your registered phone number",
+        data: {
+          userId: foundMobileNumber._id
+        }
+      })
+    ).catch(err => {
+      console.log(err)
+      res.status(500).json({ message: "something went wrong", err })
 
+    });
+  } catch (error) {
+    console.log(error)
+  }
+}
+const verifyPhoneOtp = async (req, res) => {
+  try {
+    const { otp, userId } = req.body;
+    const user = await User.findById(userId);
+    if (!user) {
+      next({ status: 400, message: "User Not Found" });
+      return;
+    }
+
+    if (user.phoneOtp !== otp) {
+      next({ status: 400, message: "Incorrect Otp" });
+      return;
+    }
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1m" });
+
+    user.phoneOtp = "";
+    await user.save();
+
+    res.status(201).json({
+      type: "success",
+      message: "OTP verified successfully",
+      data: {
+        token,
+        userId: user._id,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
 const createCustomer = async (req, res) => {
   const { id, returns, capital } = req.body;
   try {
@@ -39,7 +112,6 @@ const createCustomer = async (req, res) => {
       ifsc,
       branch,
       profilePic: photo,
-      _d: moment(joiningDate).format("DD"),
       numberOfMonthsPaid: 0,
     });
     console.log("CLIENT_REQ", name);
@@ -169,4 +241,6 @@ module.exports = {
   updateCapital,
   exportUsers,
   getClinetReqs,
+  verifyPhoneOtp,
+  loginCustomer
 };
