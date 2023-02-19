@@ -13,13 +13,26 @@ const userSchema = new mongoose.Schema(
       type: String,
       // required: true,
     },
-    phoneNumber: String,
+    phoneNumber: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true
+    },
+    phoneOtp: String,
     capital: {
       type: String,
       required: true,
     },
     returns: Array,
     transactions: Array,
+    bankaccount: String,
+    ifsc: String,
+    branch: String,
+    approved: {
+      type: Boolean,
+      default: true,
+    },
     role: {
       type: String,
       enum: ["user", "admin"],
