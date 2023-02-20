@@ -15,9 +15,11 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { Link, Outlet } from "react-router-dom";
 import styled from "styled-components";
+import { logout } from "../features/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 const drawerWidth = 240;
-const navItems = ["Home", "Customers", "Profile"];
+const navItems = ["Home", "Customers", "logout"];
 
 export default function DrawerAppBar(props) {
   const { window } = props;
@@ -53,7 +55,7 @@ export default function DrawerAppBar(props) {
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
-
+  const dispatch = useDispatch();
   return (
     <Box sx={{ display: "flex", backgroundColor: "#1E1E1E" }}>
       <CssBaseline />
@@ -82,14 +84,29 @@ export default function DrawerAppBar(props) {
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navItems.map((item) => (
-              <Button
-                key={item}
-                sx={{ color: "#fff" }}
-                component={Link}
-                to={`/app/${item}`}
-              >
-                {item}
-              </Button>
+              <>
+                {item === "logout" ? (
+                  <Button
+                    variant="contained"
+                    color="error"
+                    sx={{ mr: 1 }}
+                    onClick={() => dispatch(logout())}
+                  >
+                    {item}
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      key={item}
+                      sx={{ color: "#fff", mr: 1 }}
+                      component={Link}
+                      to={`/app/${item}`}
+                    >
+                      {item}
+                    </Button>
+                  </>
+                )}
+              </>
             ))}
           </Box>
         </Toolbar>
