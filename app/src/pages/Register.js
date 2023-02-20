@@ -56,8 +56,8 @@ const Register = () => {
         bankError();
         return;
       }
-      baseUrl
-        .post("/userinfo", {
+      axios
+        .post("https://stag-backend.onrender.com/userinfo", {
           data,
         })
         .then(function (response) {
