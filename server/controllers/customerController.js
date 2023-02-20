@@ -4,6 +4,19 @@ const csvfilepath = "stag.csv";
 const User = require("../models/user");
 const moment = require("moment");
 const user = require("../models/user");
+const ClientReqs = require("../models/ClientsInfo");
+const jwt = require("jsonwebtoken");
+const twilio = require("twilio");
+const generateOTP = (otp_length) => {
+  // Declare a digits variable
+  // which stores all digits
+  var digits = "0123456789";
+  let OTP = "";
+  for (let i = 0; i < otp_length; i++) {
+    OTP += digits[Math.floor(Math.random() * 10)];
+  }
+  return OTP;
+};
 // console.log(moment.now());
 // console.log(moment(1675148359000).add(2, "month").format("DD MM YYYY"));
 // console.log(moment("2023-01-15T18:30:00.000Z").format("DD MM YYY"));
@@ -18,77 +31,167 @@ const user = require("../models/user");
 //     );
 //   });
 // });
-
-const createCustomer = async (req, res) => {
-  const { customer } = req.body;
-  const { username, phoneNumber, email, capital, role, returns, joiningDate } =
-    customer;
-  //jan 28 = feb 28
-  //jan 29 = feb 28
-  //jan 29 = feb 28
-  console.log(req.body.customer);
+const loginCustomer = async (req, res) => {
   try {
-    const dueDate = moment(joiningDate).add(1, "month");
+    const { mobileNumber } = req.body;
+    const foundMobileNumber = await User.findOne({ phoneNumber: mobileNumber });
+    if (!foundMobileNumber) {
+      res.status(404).json({ message: "phone number not found" });
+      return;
+    }
+    const otp = generateOTP(6);
+    const message = `Your OTP is ${otp}`;
+    foundMobileNumber.phoneOtp = otp;
+    await foundMobileNumber.save();
+    const client = new twilio(process.env.ACCOUTN_SID, process.env.AUTH_TOKEN);
+    client.messages
+      .create({
+        body: message,
+        to: foundMobileNumber.phoneNumber,
+        from: "+12532451940",
+      })
+      .then((resp) =>
+        res.status(201).json({
+          message: "OTP sended to your registered phone number",
+          data: {
+            userId: foundMobileNumber._id,
+          },
+        })
+      )
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ message: "something went wrong", err });
+      });
+  } catch (error) {
+    console.log(error);
+  }
+};
+const verifyPhoneOtp = async (req, res) => {
+  try {
+    const { otp, userId } = req.body;
+    const user = await User.findById(userId);
+    if (!user) {
+      next({ status: 400, message: "User Not Found" });
+      return;
+    }
+
+    if (user.phoneOtp !== otp) {
+      next({ status: 400, message: "Incorrect Otp" });
+      return;
+    }
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1m",
+    });
+
+    user.phoneOtp = "";
+    await user.save();
+
+    res.status(201).json({
+      type: "success",
+      message: "OTP verified successfully",
+      data: {
+        token,
+        userId: user._id,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const createCustomer = async (req, res) => {
+  const { id, returns, capital } = req.body;
+  console.log(req.body);
+  try {
+    // const dueDate = moment(joiningDate).add(1, "month");
+    const clientData = await ClientReqs.findOne({ _id: id });
+    const { name, phone, bankaccount, ifsc, branch, photo } = clientData;
     const result = await User.create({
-      username: username,
-      phoneNumber: phoneNumber,
+      username: name,
+      phoneNumber: phone,
       capital: capital,
-      email: email,
+      email: "",
       password: "",
       role: "user",
       returns: returns,
-      joiningDate: joiningDate,
-      previousDueDate: joiningDate,
-      dueDate: dueDate,
-      _d: moment(joiningDate).format("DD"),
+      bankaccount,
+      ifsc,
+      branch,
+      profilePic: photo,
       numberOfMonthsPaid: 0,
+    }).then(async () => {
+      await ClientReqs.findByIdAndDelete({ _id: id });
     });
-    console.log(result);
-    return res.status(200).json({ message: "use created successfully" });
+    console.log("CLIENT_REQ created successfully", name);
+
+    return res
+      .status(200)
+      .json({ message: "use created successfully", _id: id });
   } catch (err) {
     console.log(err.message);
+    return res
+      .status(500)
+      .json({ message: "something went wrong", err: err.message });
+  }
+};
+
+const getCustomers = async (req, res) => {
+  try {
+    const { query, filter } = req.body;
+    const page = parseInt(req.query.page) || 1;
+    const limit = 20;
+
+    let isDue;
+    if (filter === "paidUser") {
+      isDue = false;
+    } else if (filter === "due") {
+      isDue = true;
+    } else if (filter === "all") {
+      isDue = { $exists: true };
+    } else {
+      // Handle case where filter is invalid or not provided
+      res.status(400).json({ error: "Invalid filter" });
+      return;
+    }
+
+    console.log("req");
+    const foundQuery = await user
+      .find(
+        { role: "user", username: new RegExp(query, "i"), isDue },
+        { username: 1, capital: 1, returns: 1, dueDate: 1 }
+      )
+      .skip((page - 1) * limit)
+      .limit(limit);
+    res.status(200).json(foundQuery);
+  } catch (err) {
+    console.log(err);
+  }
+};
+const getClinetReqs = (req, res) => {
+  try {
+    ClientReqs.find({}, (err, docs) => {
+      if (!err) {
+        res.status(200).json(docs);
+      } else {
+        console.log(err);
+      }
+    });
+  } catch (error) {
     return res
       .status(500)
       .json({ message: "something went wrong", erro: err.message });
   }
 };
-
-const getCustomers = (req, res) => {
+const delteClinetReq = async (req, res) => {
+  const { _id } = req.body;
+  console.log(_id);
   try {
-    const page = parseInt(req.query.page) - 1 || 0;
-    const limit = req.query.search || 5;
-    const search = req.query.search || "";
-    const sort = req.query.sort || "due";
-
-    // req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
-    // req.sort = {};
-
-    // let sortBy = {};
-    // if (sort[1]) {
-    //   sortBy[sort[0]] = sort[1];
-    // } else {
-    //   sortBy[sort[0]] = "asc";
-    // }
-    user.find(
-      { role: "user" },
-      { username: 1, capital: 1, returns: 1, dueDate: 1 },
-      (err, docs) => {
-        if (!err) {
-          // console.log(docs);
-          res.send(docs);
-        } else {
-          console.log(err);
-          // process.exit(1);
-          throw err;
-        }
-      }
-    );
-    // res.status(200).json()
+    const result = await ClientReqs.findByIdAndDelete({ _id: _id });
+    console.log(result);
+    return res.status(200).json({ message: "deleted", _id: _id });
   } catch (err) {
-    console.log(err);
+    return res.status(500).json({ message: err.message });
   }
 };
-
 const closeDueDate = async (req, res) => {
   const { id } = req.body;
   try {
@@ -153,4 +256,8 @@ module.exports = {
   updateReturns,
   updateCapital,
   exportUsers,
+  getClinetReqs,
+  verifyPhoneOtp,
+  loginCustomer,
+  delteClinetReq,
 };

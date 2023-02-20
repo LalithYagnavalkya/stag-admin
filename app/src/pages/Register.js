@@ -56,7 +56,7 @@ const Register = () => {
         return;
       }
       axios
-        .post("https://stag-backend.onrender.com/userinfo", {
+        .post("http://localhost:4000/userinfo", {
           data,
         })
         .then(function (response) {

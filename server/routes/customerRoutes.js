@@ -9,14 +9,25 @@ const {
   updateReturns,
   updateCapital,
   exportUsers,
+  getClinetReqs,
+  loginCustomer,
+  verifyPhoneOtp,
+  delteClinetReq,
 } = require("../controllers/customerController");
 const auth = require("../middleware/auth");
 
 const customerRouter = express.Router();
+//actual customers
+customerRouter.post("/login_with_phone", loginCustomer);
+customerRouter.post("/verify_phone_otp", verifyPhoneOtp);
 
 customerRouter.post("/createCustomer", auth, createCustomer);
 
-customerRouter.get("/customers", auth, getCustomers);
+customerRouter.post("/customers", auth, getCustomers);
+
+customerRouter.get("/getclientreqs", auth, getClinetReqs);
+
+customerRouter.post("/deleteclientreq", auth, delteClinetReq);
 
 customerRouter.post("/closeDueDate", auth, closeDueDate);
 

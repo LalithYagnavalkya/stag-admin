@@ -30,7 +30,7 @@ app.listen(process.env.PORT, () => {
 //   });
 // });
 // Schedule tasks to be run on the server.
-// cron.schedule("0 0 * * *", function () {
+// cron.schedule("0 0 1 * *", function () {
 //   const today = moment().format("DD");
 //   User.find({ _d: today.toString() }, (err, docs) => {
 //     docs.map(async (doc) => {
