@@ -17,12 +17,12 @@ const auth = require("../middleware/auth");
 
 const customerRouter = express.Router();
 //actual customers
-customerRouter.post('/login_with_phone', loginCustomer)
-customerRouter.post('/verify_phone_otp', verifyPhoneOtp)
+customerRouter.post("/login_with_phone", loginCustomer);
+customerRouter.post("/verify_phone_otp", verifyPhoneOtp);
 
 customerRouter.post("/createCustomer", auth, createCustomer);
 
-customerRouter.get("/customers", auth, getCustomers);
+customerRouter.post("/customers", auth, getCustomers);
 
 customerRouter.get("/getclientreqs", auth, getClinetReqs);
 

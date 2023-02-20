@@ -1,27 +1,13 @@
 import baseUrl from "../../baseUrl";
 
-const getAllCustomers = async ({ token }) => {
+const getAllCustomers = async ({ token, filter, query }) => {
   const updatedToken = "Bearer " + token;
-  const response = await baseUrl.get("/customers", {
-    headers: {
-      Authorization: updatedToken,
-    },
-  });
-  // console.log(token);
-  if (response.status == 200) {
-    console.log(response);
-    return response.data;
-  } else {
-    return response;
-  }
-};
-const AddCustomer = async ({ token, customer }) => {
-  const updatedToken = "Bearer " + token;
-  console.log(customer);
-
   const response = await baseUrl.post(
-    "/createCustomer",
-    { customer },
+    "/customers",
+    {
+      query,
+      filter,
+    },
     {
       headers: {
         Authorization: updatedToken,
@@ -30,6 +16,27 @@ const AddCustomer = async ({ token, customer }) => {
   );
   // console.log(token);
   if (response.status == 200) {
+    console.log(response);
+    return response.data;
+  } else {
+    return response;
+  }
+};
+const AddCustomer = async ({ token, id, capital, returns }) => {
+  const updatedToken = "Bearer " + token;
+  console.log(returns);
+  const response = await baseUrl.post(
+    "/createCustomer",
+    { id, returns, capital },
+    {
+      headers: {
+        Authorization: updatedToken,
+      },
+    }
+  );
+  // console.log(token);
+  if (response.status == 200) {
+    console.log(response.data);
     return response.data;
   } else {
     return response;

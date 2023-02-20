@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 import { toast } from "react-toastify";
+import baseUrl from "../../baseUrl";
 import customerServices from "./customerServices";
 
 const initialState = {
@@ -16,19 +18,28 @@ const initialState = {
 
 export const getAllCustomers = createAsyncThunk(
   "customers/getall",
-  async (user, thunkAPI) => {
-    try {
-      console.log(user);
-      return await customerServices.getAllCustomers(user);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      return thunkAPI.rejectWithValue(message);
-    }
+
+  async (obj, { dispatch, getState, signal }) => {
+    const { token, filter, query } = obj;
+    const updatedToken = "Bearer " + token;
+    const source = axios.CancelToken.source();
+    signal.addEventListener("abort", () => {
+      console.log("canceelled");
+      source.cancel();
+    });
+    const controller = new AbortController();
+    const response = await baseUrl.post(
+      "/customers",
+      { query, filter },
+      { headers: { Authorization: updatedToken } },
+      {
+        cancelToken: source.token,
+        signal: controller.signal,
+      }
+    );
+    // const response = await controller.abort();
+    console.log(response.data);
+    return response.data;
   }
 );
 export const getReqs = createAsyncThunk(
@@ -143,6 +154,9 @@ export const customerSlice = createSlice({
       })
       .addCase(AddCustomer.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.reqs = state.reqs.filter((req) => req._id !== action.payload._id);
+        toast.success("User Created");
+
         // if (state.user !== "") state.isSuccess = true;
         // state.customers = action.payload;
       })
@@ -151,6 +165,7 @@ export const customerSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
         state.customers = null;
+        toast.error("Something went wrong try again later");
       })
       .addCase(GetCustomer.pending, (state) => {
         state.isLoading = true;
@@ -173,7 +188,7 @@ export const customerSlice = createSlice({
       .addCase(DeleteClinetReq.fulfilled, (state, action) => {
         state.isLoading = false;
         state.reqs = state.reqs.filter((req) => req._id !== action.payload);
-        toast.success("hello suc");
+        toast.success("Request deleted");
         state.isClientReqDeleted = true;
       })
       .addCase(DeleteClinetReq.rejected, (state, action) => {

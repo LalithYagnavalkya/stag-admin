@@ -82,12 +82,22 @@ const Customers = () => {
   //
   //
   //
-  const [filter, setFilter] = useState(20);
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
     console.log(user.token);
-    dispatch(getAllCustomers({ token: user.token }));
+    dispatch(getAllCustomers({ token: user.token, query, filter }));
   }, []);
+  useEffect(() => {
+    // dispatch(getAllCustomers({ token: user.token, query, filter }));
+    const promise = dispatch(
+      getAllCustomers({ token: user.token, query, filter })
+    );
+    return () => {
+      promise.abort();
+    };
+  }, [query]);
 
   return (
     <CustomerPage>
@@ -97,6 +107,12 @@ const Customers = () => {
           defaultValue=""
           variant="outlined"
           label="Search"
+          autoFocus="autofocus"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            e.preventDefault();
+          }}
         />
         <StyledInputField sx={{ width: "200px" }}>
           <InputLabel id="demo-simple-select-label" sx={{ color: "white" }}>
@@ -125,9 +141,9 @@ const Customers = () => {
             }}
             // onChange={handleChange}
           >
-            <MenuItem value={10}>All</MenuItem>
-            <MenuItem value={20}>Due</MenuItem>
-            <MenuItem value={30}>Recently Paid</MenuItem>
+            <MenuItem value={"all"}>All</MenuItem>
+            <MenuItem value={"due"}>Due</MenuItem>
+            <MenuItem value={"recentlypaid"}>Recently Paid</MenuItem>
           </Select>
         </StyledInputField>
       </div>

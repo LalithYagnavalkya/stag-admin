@@ -5,8 +5,8 @@ const User = require("../models/user");
 const moment = require("moment");
 const user = require("../models/user");
 const ClientReqs = require("../models/ClientsInfo");
-const jwt = require('jsonwebtoken')
-const twilio = require('twilio');
+const jwt = require("jsonwebtoken");
+const twilio = require("twilio");
 const generateOTP = (otp_length) => {
   // Declare a digits variable
   // which stores all digits
@@ -33,37 +33,39 @@ const generateOTP = (otp_length) => {
 // });
 const loginCustomer = async (req, res) => {
   try {
-    const { mobileNumber } = req.body
+    const { mobileNumber } = req.body;
     const foundMobileNumber = await User.findOne({ phoneNumber: mobileNumber });
     if (!foundMobileNumber) {
-      res.status(404).json({ message: "phone number not found" })
+      res.status(404).json({ message: "phone number not found" });
       return;
     }
-    const otp = generateOTP(6)
-    const message = `Your OTP is ${otp}`
+    const otp = generateOTP(6);
+    const message = `Your OTP is ${otp}`;
     foundMobileNumber.phoneOtp = otp;
     await foundMobileNumber.save();
-    const client = new twilio(process.env.ACCOUTN_SID, process.env.AUTH_TOKEN)
-    client.messages.create({
-      body: message,
-      to: foundMobileNumber.phoneNumber,
-      from: '+12532451940'
-    }).then(resp =>
-      res.status(201).json({
-        message: "OTP sended to your registered phone number",
-        data: {
-          userId: foundMobileNumber._id
-        }
+    const client = new twilio(process.env.ACCOUTN_SID, process.env.AUTH_TOKEN);
+    client.messages
+      .create({
+        body: message,
+        to: foundMobileNumber.phoneNumber,
+        from: "+12532451940",
       })
-    ).catch(err => {
-      console.log(err)
-      res.status(500).json({ message: "something went wrong", err })
-
-    });
+      .then((resp) =>
+        res.status(201).json({
+          message: "OTP sended to your registered phone number",
+          data: {
+            userId: foundMobileNumber._id,
+          },
+        })
+      )
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json({ message: "something went wrong", err });
+      });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 const verifyPhoneOtp = async (req, res) => {
   try {
     const { otp, userId } = req.body;
@@ -77,7 +79,9 @@ const verifyPhoneOtp = async (req, res) => {
       next({ status: 400, message: "Incorrect Otp" });
       return;
     }
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "1m" });
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1m",
+    });
 
     user.phoneOtp = "";
     await user.save();
@@ -93,12 +97,13 @@ const verifyPhoneOtp = async (req, res) => {
   } catch (error) {
     next(error);
   }
-}
+};
 const createCustomer = async (req, res) => {
   const { id, returns, capital } = req.body;
+  console.log(req.body);
   try {
     // const dueDate = moment(joiningDate).add(1, "month");
-    const clientData = await ClientReqs.findOne({ _id: id })
+    const clientData = await ClientReqs.findOne({ _id: id });
     const { name, phone, bankaccount, ifsc, branch, photo } = clientData;
     const result = await User.create({
       username: name,
@@ -114,49 +119,55 @@ const createCustomer = async (req, res) => {
       profilePic: photo,
       numberOfMonthsPaid: 0,
     });
-    console.log("CLIENT_REQ", name);
-    return res.status(200).json({ message: "use created successfully" });
+    console.log("CLIENT_REQ created successfully", name);
+    if (result) {
+      async (err, docs) => {
+        if (!err) {
+          await ClientReqs.findByIdAndDelete({ _id: id }, (err) => {
+            console.log(err);
+          });
+        }
+      };
+    }
+    return res
+      .status(200)
+      .json({ message: "use created successfully", _id: id });
   } catch (err) {
-    // console.log(err.message);
+    console.log(err.message);
     return res
       .status(500)
-      .json({ message: "something went wrong", erro: err.message });
+      .json({ message: "something went wrong", err: err.message });
   }
 };
 
-const getCustomers = (req, res) => {
+const getCustomers = async (req, res) => {
   try {
     const { query, filter } = req.body;
     const page = parseInt(req.query.page) || 1;
     const limit = 20;
 
     let isDue;
-    if (filter === 'paidUser') {
+    if (filter === "paidUser") {
       isDue = false;
-    } else if (filter === 'due') {
+    } else if (filter === "due") {
       isDue = true;
-    } else if (filter === 'all') {
+    } else if (filter === "all") {
       isDue = { $exists: true };
     } else {
       // Handle case where filter is invalid or not provided
-      res.status(400).json({ error: 'Invalid filter' });
+      res.status(400).json({ error: "Invalid filter" });
       return;
     }
 
-    const foundQuery = user.find(
-      { role: 'user', username: new RegExp(query, 'i'), isDue },
-      { username: 1, capital: 1, returns: 1, dueDate: 1 },
-      (err, docs) => {
-        if (!err) {
-          console.log(docs);
-          res.status(200).json(docs);
-        } else {
-          console.log(err);
-          res.status(500).json({ error: 'Internal server error' });
-        }
-      }
-    ).skip((page - 1) * limit).limit(limit);
-    res.status(200).json(foundQuery)
+    console.log("req");
+    const foundQuery = await user
+      .find(
+        { role: "user", username: new RegExp(query, "i"), isDue },
+        { username: 1, capital: 1, returns: 1, dueDate: 1 }
+      )
+      .skip((page - 1) * limit)
+      .limit(limit);
+    res.status(200).json(foundQuery);
   } catch (err) {
     console.log(err);
   }
@@ -190,7 +201,7 @@ const updateCustomer = (req, res) => {
   res.send("hello");
 };
 
-const deleteCustomer = (req, res) => { };
+const deleteCustomer = (req, res) => {};
 
 const getCustomer = (req, res) => {
   const { id } = req.body;
@@ -212,8 +223,8 @@ const getCustomer = (req, res) => {
     res.status(500).json({ message: err.mess });
   }
 };
-const updateReturns = (req, res) => { };
-const updateCapital = (req, res) => { };
+const updateReturns = (req, res) => {};
+const updateCapital = (req, res) => {};
 
 const exportUsers = async (req, res) => {
   csvtojson()
@@ -242,5 +253,5 @@ module.exports = {
   exportUsers,
   getClinetReqs,
   verifyPhoneOtp,
-  loginCustomer
+  loginCustomer,
 };

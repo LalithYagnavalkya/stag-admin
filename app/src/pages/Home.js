@@ -108,7 +108,7 @@ const Home = () => {
             {reqs?.map((customer, index) => {
               return (
                 <CustomerBar
-                  key={index}
+                  key={customer._id}
                   {...customer}
                   // handleOpenDelete={handleOpenDelete}
                   // handleCloseDelete={handleCloseDelete}

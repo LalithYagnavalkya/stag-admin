@@ -64,13 +64,14 @@ const CustomerBar = ({
 
   //states/
 
-  const [expand, setExpand] = React.useState(false);
+  const [expand, setExpand] = React.useState(true);
   const [openDeleteUser, setOpenDeleteUser] = React.useState(false);
   const [minReturns, setMinReturns] = useState(0);
   const [maxReturns, setMaxReturns] = useState(0);
 
   const handleOpenDelete = () => setOpenDeleteUser(true);
   const handleCloseDelete = () => setOpenDeleteUser(false);
+
   const materialUiTextFieldProps = {
     required: true,
     // error: totalAmount > 100000,
@@ -86,11 +87,29 @@ const CustomerBar = ({
     returns: [],
   });
 
+  useEffect(() => {
+    console.log(userDetails);
+  }, [userDetails.returns, minReturns]);
+
+  useEffect(() => {
+    setUserDetails((prev) => ({
+      ...prev,
+      returns: [minReturns, maxReturns],
+    }));
+  }, [maxReturns]);
+
+  useEffect(() => {
+    setUserDetails((prev) => ({
+      ...prev,
+      returns: [minReturns, maxReturns],
+    }));
+  }, [minReturns]);
   return (
     <CustomerBarStyled>
       <Accordion>
         <AccordionSummary
           // expandIcon={<ExpandMoreIcon />}
+
           aria-controls="panel1a-content"
           id="panel1a-header"
           IconButtonProps={{
@@ -156,6 +175,7 @@ const CustomerBar = ({
                   startAdornment={
                     <InputAdornment position="start">%</InputAdornment>
                   }
+                  placeholder="0"
                   onChange={(e) => {
                     setMinReturns(e.target.value);
                     setUserDetails((prev) => ({
@@ -172,6 +192,7 @@ const CustomerBar = ({
                   startAdornment={
                     <InputAdornment position="start">%</InputAdornment>
                   }
+                  placeholder="0"
                   onChange={(e) => {
                     setMaxReturns(e.target.value);
                     setUserDetails((prev) => ({
@@ -191,11 +212,15 @@ const CustomerBar = ({
                 dispatch(
                   AddCustomer({
                     token: user.token,
-                    _id: _id,
+                    id: _id,
                     capital: userDetails.capital,
-                    return: [minReturns, maxReturns],
+                    returns: [minReturns, maxReturns],
                   })
                 );
+                setUserDetails({
+                  capital: "",
+                  returns: [],
+                });
               }}
             >
               Done
