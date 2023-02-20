@@ -80,7 +80,7 @@ const deleteReq = async ({ token, _id }) => {
   const updatedToken = "Bearer " + token;
 
   const response = await baseUrl.post(
-    "/deletereq",
+    "/deleteclientreq",
     { _id },
     {
       headers: {
@@ -89,6 +89,7 @@ const deleteReq = async ({ token, _id }) => {
     }
   );
   if (response.status == 200) {
+    console.log(response.data._id);
     return response.data._id;
   } else {
     return response;

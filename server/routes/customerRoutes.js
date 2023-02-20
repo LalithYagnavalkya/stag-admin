@@ -12,6 +12,7 @@ const {
   getClinetReqs,
   loginCustomer,
   verifyPhoneOtp,
+  delteClinetReq,
 } = require("../controllers/customerController");
 const auth = require("../middleware/auth");
 
@@ -25,6 +26,8 @@ customerRouter.post("/createCustomer", auth, createCustomer);
 customerRouter.post("/customers", auth, getCustomers);
 
 customerRouter.get("/getclientreqs", auth, getClinetReqs);
+
+customerRouter.post("/deleteclientreq", auth, delteClinetReq);
 
 customerRouter.post("/closeDueDate", auth, closeDueDate);
 

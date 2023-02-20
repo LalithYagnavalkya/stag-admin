@@ -118,17 +118,11 @@ const createCustomer = async (req, res) => {
       branch,
       profilePic: photo,
       numberOfMonthsPaid: 0,
+    }).then(async () => {
+      await ClientReqs.findByIdAndDelete({ _id: id });
     });
     console.log("CLIENT_REQ created successfully", name);
-    if (result) {
-      async (err, docs) => {
-        if (!err) {
-          await ClientReqs.findByIdAndDelete({ _id: id }, (err) => {
-            console.log(err);
-          });
-        }
-      };
-    }
+
     return res
       .status(200)
       .json({ message: "use created successfully", _id: id });
@@ -185,6 +179,17 @@ const getClinetReqs = (req, res) => {
     return res
       .status(500)
       .json({ message: "something went wrong", erro: err.message });
+  }
+};
+const delteClinetReq = async (req, res) => {
+  const { _id } = req.body;
+  console.log(_id);
+  try {
+    const result = await ClientReqs.findByIdAndDelete({ _id: _id });
+    console.log(result);
+    return res.status(200).json({ message: "deleted", _id: _id });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 };
 const closeDueDate = async (req, res) => {
@@ -254,4 +259,5 @@ module.exports = {
   getClinetReqs,
   verifyPhoneOtp,
   loginCustomer,
+  delteClinetReq,
 };

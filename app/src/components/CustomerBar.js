@@ -270,7 +270,8 @@ const CustomerBar = ({
               variant="contained"
               color="error"
               onClick={() => {
-                dispatch(DeleteClinetReq({ token: user.id, _id: _id }));
+                dispatch(DeleteClinetReq({ token: user.token, _id: _id }));
+                handleCloseDelete();
               }}
             >
               Delete
