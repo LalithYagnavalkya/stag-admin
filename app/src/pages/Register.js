@@ -11,6 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import axios from "axios";
+import baseUrl from "../baseUrl";
 
 const Register = () => {
   let theme = createTheme();
@@ -55,8 +56,8 @@ const Register = () => {
         bankError();
         return;
       }
-      axios
-        .post("http://localhost:4000/userinfo", {
+      baseUrl
+        .post("/userinfo", {
           data,
         })
         .then(function (response) {
