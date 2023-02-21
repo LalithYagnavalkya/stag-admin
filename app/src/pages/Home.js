@@ -105,16 +105,24 @@ const Home = () => {
         <div className="right-home">
           <span className="right-home-name">Requests</span>
           <div className="customers-container">
-            {reqs?.map((customer, index) => {
-              return (
-                <CustomerBar
-                  key={customer._id}
-                  {...customer}
-                  // handleOpenDelete={handleOpenDelete}
-                  // handleCloseDelete={handleCloseDelete}
-                ></CustomerBar>
-              );
-            })}
+            {reqs.length === 0 ? (
+              <>
+                <img src="/illus/noreqs.svg" alt="" srcset="" />
+              </>
+            ) : (
+              <>
+                {reqs?.map((customer, index) => {
+                  return (
+                    <CustomerBar
+                      key={customer._id}
+                      {...customer}
+                      // handleOpenDelete={handleOpenDelete}
+                      // handleCloseDelete={handleCloseDelete}
+                    ></CustomerBar>
+                  );
+                })}
+              </>
+            )}
           </div>
         </div>
       </Box>

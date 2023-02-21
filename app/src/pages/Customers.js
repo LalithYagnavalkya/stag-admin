@@ -191,7 +191,7 @@ const CustomerPage = styled.div`
     display: flex;
     justify-content: center;
     padding-top: 2rem;
-    height: calc(100vh - 7rem);
+    min-height: calc(100vh - 7rem);
     /* flex-wrap: wrap; */
     /* flex-direction: column; */
 

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { GetCustomer } from "../features/customers/customerSlice";
-import { Avatar, IconButton, Tooltip } from "@mui/material";
+import { Avatar, Button, IconButton, Tooltip } from "@mui/material";
 import moment from "moment";
 import EditIcon from "@mui/icons-material/Edit";
 const SingleCustomer = () => {
@@ -27,6 +27,11 @@ const SingleCustomer = () => {
             src={currentCustomer.profilePic}
           ></Avatar>
           <span>{currentCustomer.username}</span>
+          {!currentCustomer.isDue ? (
+            <span className="pending-button">Due</span>
+          ) : (
+            <span className="paid-button">Paid</span>
+          )}
         </div>
         <div className="single-customer-right">
           <div className="current-customer-feild">
@@ -89,7 +94,7 @@ const SingleCustomer = () => {
           <div className="current-customer-feild">
             <span className="customer-feild-heading"> Ifsc </span>
 
-            {currentCustomer?.ifsc === "" ? (
+            {currentCustomer?.ifsc === "" || currentCustomer?.ifsc == null ? (
               <div style={{ color: "#E55959" }}>
                 Ifsc account number not provided
               </div>
@@ -106,14 +111,32 @@ const SingleCustomer = () => {
           </div>
 
           <div className="Update-payment-btn">Update payment</div>
-        </div>
-
-        <div className="captial-returns-place">
-          <div className="captial-place">
-            <span className="feild-heading-place">Capital</span>
-          </div>
-          <div className="returns-palce">
-            <span className="feild-heading-place">Returns</span>
+          <div className="captial-returns-place">
+            <>
+              <div className="captial-place">
+                <span className="place-value">₹{currentCustomer?.capital}</span>
+                <span className="feild-heading-place">Capital</span>
+              </div>
+              <Tooltip title="edit">
+                <IconButton>
+                  <EditIcon sx={{ color: "#d4d4d4" }} />
+                </IconButton>
+              </Tooltip>
+            </>
+            <>
+              <div className="returns-palce">
+                <span className="place-value">
+                  {/* <span>{currentCustomer?.returns[0]}%</span> - */}
+                  {/* {currentCustomer?.returns[1]}% */}
+                </span>
+                <span className="feild-heading-place">Returns</span>
+              </div>
+              <Tooltip title="edit">
+                <IconButton>
+                  <EditIcon sx={{ color: "#d4d4d4" }} />
+                </IconButton>
+              </Tooltip>
+            </>
           </div>
         </div>
       </div>
@@ -126,6 +149,7 @@ export default SingleCustomer;
 const SinglePageCutomers = styled.div`
   padding-top: 8rem;
   display: flex;
+  font-family: "Metropolis";
   height: 100vh;
   justify-content: space-between;
   padding: 10rem 2rem;
@@ -144,6 +168,28 @@ const SinglePageCutomers = styled.div`
     row-gap: 1rem;
     span {
       font-size: 24px;
+    }
+    .pending-button {
+      border: 1px solid #e55959;
+      border-radius: 7px;
+      font-weight: 500;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 18px;
+      color: #e55959;
+    }
+    .paid-button {
+      border: 1px solid #4e9f3d;
+      border-radius: 7px;
+      font-weight: 500;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 18px;
+      color: #4e9f3d;
     }
   }
   .single-customer-right {
@@ -184,6 +230,41 @@ const SinglePageCutomers = styled.div`
       line-height: 106.34%;
       padding: 14px 2px;
       cursor: pointer;
+    }
+    .captial-returns-place {
+      padding: 2rem 2rem;
+
+      display: flex;
+      justify-content: space-between;
+      .captial-place,
+      .returns-palce {
+        display: flex;
+        flex-direction: column;
+        row-gap: 0.8rem;
+        justify-content: center;
+        align-items: center;
+      }
+      .place-value {
+        font-family: "Metropolis";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 32px;
+        line-height: 69.84%;
+        letter-spacing: -0.02em;
+        color: #fff;
+      }
+      .feild-heading-place {
+        font-family: "Metropolis";
+        font-style: normal;
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 69.84%;
+        /* identical to box height, or 17px */
+
+        letter-spacing: -0.02em;
+
+        color: #d5d5d5;
+      }
     }
   }
 `;
