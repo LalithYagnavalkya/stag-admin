@@ -14,7 +14,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb" }));
 app.use(cors({ credentials: true, origin: true }));
 
-app.use("/api/v1", admin);
+app.use("/api/v1/admin", admin);
 app.use("/api/v1", customerRouter);
 
 app.post("/userinfo", cors(corsOptions), async (req, res) => {

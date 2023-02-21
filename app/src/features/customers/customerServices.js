@@ -3,7 +3,7 @@ import baseUrl from "../../baseUrl";
 const getAllCustomers = async ({ token, filter, query }) => {
   const updatedToken = "Bearer " + token;
   const response = await baseUrl.post(
-    "/customers",
+    "/admin/customers",
     {
       query,
       filter,
@@ -26,7 +26,7 @@ const AddCustomer = async ({ token, id, capital, returns }) => {
   const updatedToken = "Bearer " + token;
   console.log(returns);
   const response = await baseUrl.post(
-    "/createCustomer",
+    "/admin/createCustomer",
     { id, returns, capital },
     {
       headers: {
@@ -47,7 +47,7 @@ const getCustomer = async ({ token, id }) => {
   console.log(id);
   console.log(updatedToken);
   const response = await baseUrl.post(
-    "/getcustomer",
+    "/admin/getcustomer",
     { id: id },
     {
       headers: {
@@ -64,7 +64,7 @@ const getCustomer = async ({ token, id }) => {
 };
 const getReqs = async ({ token }) => {
   const updatedToken = "Bearer " + token;
-  const response = await baseUrl.get("/getclientreqs", {
+  const response = await baseUrl.get("/admin/getclientreqs", {
     headers: {
       Authorization: updatedToken,
     },
@@ -80,7 +80,7 @@ const deleteReq = async ({ token, _id }) => {
   const updatedToken = "Bearer " + token;
 
   const response = await baseUrl.post(
-    "/deleteclientreq",
+    "/admin/deleteclientreq",
     { _id },
     {
       headers: {

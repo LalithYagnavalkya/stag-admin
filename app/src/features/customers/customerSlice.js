@@ -29,7 +29,7 @@ export const getAllCustomers = createAsyncThunk(
     });
     const controller = new AbortController();
     const response = await baseUrl.post(
-      "/customers",
+      "/admin/customers",
       { query, filter },
       { headers: { Authorization: updatedToken } },
       {

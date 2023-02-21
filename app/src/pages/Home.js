@@ -81,26 +81,6 @@ const Home = () => {
 
           <span className="day-name">{moment().format("dddd")}</span>
           <span className="date-name">{moment().format("MMMM D  yy")}</span>
-          <div>
-            <Fab
-              variant="extended"
-              onClick={handleOpen}
-              color="success"
-              aria-label="add"
-            >
-              <AddIcon sx={{ mr: 1 }} />
-              Add Client
-            </Fab>
-
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <AddCustomerModel handleClose={handleClose} />
-            </Modal>
-          </div>
         </div>
         <div className="right-home">
           <span className="right-home-name">Requests</span>
@@ -152,7 +132,7 @@ const HomeStyles = styled.div`
       font-weight: 300;
     }
     .day-name {
-      font-size: 34px;
+      /* font-size: 34px; */
     }
   }
   .right-home {

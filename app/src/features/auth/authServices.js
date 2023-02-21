@@ -1,6 +1,6 @@
 import baseUrl from "../../baseUrl";
 const login = async (user) => {
-  const response = await baseUrl.post("/signin", user);
+  const response = await baseUrl.post("/admin/signin", user);
   localStorage.setItem("currentUser", JSON.stringify(response.data));
   return response.data;
 };

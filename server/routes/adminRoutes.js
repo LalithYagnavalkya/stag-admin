@@ -1,9 +1,44 @@
 const express = require("express");
-const { signup, signin } = require("../controllers/adminController");
-const userRouter = express.Router();
+const {
+  signup,
+  signin,
+  createCustomer,
+  closeDueDate,
+  updateCustomer,
+  deleteCustomer,
+  getCustomer,
+  getCustomers,
+  updateReturns,
+  deleteClinetReq,
+  updateCapital,
+  getClinetReqs,
+} = require("../controllers/adminController");
+const adminRoutes = express.Router();
+const auth = require("../middleware/auth");
 
-userRouter.post("/signup", signup);
+adminRoutes.post("/signup", signup);
 
-userRouter.post("/signin", signin);
+adminRoutes.post("/signin", signin);
 
-module.exports = userRouter;
+adminRoutes.post("/createCustomer", auth, createCustomer);
+
+adminRoutes.post("/customers", auth, getCustomers);
+
+adminRoutes.get("/getclientreqs", auth, getClinetReqs);
+
+adminRoutes.post("/deleteclientreq", auth, deleteClinetReq);
+
+adminRoutes.post("/closeDueDate", auth, closeDueDate);
+
+adminRoutes.post("/getcustomer", auth, getCustomer);
+
+adminRoutes.delete("/:id", auth, deleteCustomer);
+
+adminRoutes.put("/:id", auth, updateCustomer);
+
+adminRoutes.patch("/:id", auth, updateCapital);
+
+adminRoutes.patch("/:id", auth, updateReturns);
+
+// adminRoutes.post("/exportUsers", auth, exportUsers);
+module.exports = adminRoutes;
