@@ -24,7 +24,7 @@ const LoginPage = () => {
         {isLoginPressed ? (
           <Box
             sx={{
-              width: "100%",
+              width: "40%",
               display: "flex",
               flexDirection: "column",
               justifyContent: "flex-start",
@@ -46,7 +46,7 @@ const LoginPage = () => {
                 <span style={{ color: "#fff" }}>Back</span>
               </IconButton>
             </Tooltip>
-            <div className="Login-header">
+            <div className="Login--customer">
               <TextField
                 placeholder="Enter your phone number"
                 variant="filled"
@@ -72,7 +72,7 @@ const LoginPage = () => {
           </Box>
         ) : (
           <div className="login-options">
-            <div className="Login-header" s>
+            <div className="Login-header-customer" s>
               Sit back and relax while we make money for you.
             </div>
             <div className="options-container">
@@ -103,11 +103,11 @@ const LoginPage = () => {
 export default LoginPage;
 
 const CustomerLogin = styled.div`
-  height: 100%;
   background-color: #1e1e1e;
-  padding: 2rem 10rem;
-  overflow-y: hidden;
+  padding: 2rem 5rem;
   display: flex;
+  overflow: hidden;
+  height: calc(100vh -4rem);
   flex-direction: column;
   .logo-login {
     font-family: "Poppins";
@@ -123,7 +123,7 @@ const CustomerLogin = styled.div`
       margin-top: -1rem;
     }
   }
-  .Login-header {
+  .Login-header-customer {
     font-family: "Poppins";
     font-style: normal;
     font-weight: 400;
@@ -134,10 +134,15 @@ const CustomerLogin = styled.div`
   }
   .whole-page {
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
+    height: 100%;
+    padding-top: 6rem;
     overflow: hidden;
     .login-illus {
+      position: absolute;
+      right: 0;
+      bottom: 0;
     }
     .options-container {
       display: flex;
