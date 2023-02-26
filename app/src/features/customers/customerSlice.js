@@ -22,24 +22,13 @@ export const getAllCustomers = createAsyncThunk(
   async (obj, { dispatch, getState, signal }) => {
     const { token, filter, query } = obj;
     const updatedToken = "Bearer " + token;
-    const source = axios.CancelToken.source();
-    signal.addEventListener("abort", () => {
-      console.log("canceelled");
-      source.cancel();
-    });
-    const controller = new AbortController();
-    const response = await baseUrl.post(
-      "/admin/customers",
+    const response = await baseUrl.get(
+      `/admin/customers?query=${query}&filter=${filter}`,
       { query, filter },
-      { headers: { Authorization: updatedToken } },
-      {
-        cancelToken: source.token,
-        signal: controller.signal,
-      }
+      { headers: { Authorization: updatedToken } }
     );
-    // const response = await controller.abort();
-    console.log(response.data);
-    return response.data;
+    console.log(response.data.foundQuery);
+    return response.data.foundQuery;
   }
 );
 export const getReqs = createAsyncThunk(
@@ -59,6 +48,23 @@ export const getReqs = createAsyncThunk(
     }
   }
 );
+// export const updateCustomer = createAsyncThunk(
+//   "customers/updateCustomer",
+//   async (user, thunkAPI) => {
+//     try {
+//       console.log(user);
+//       return await customerServices.getReqs(user);
+//     } catch (error) {
+//       const message =
+//         (error.response &&
+//           error.response.data &&
+//           error.response.data.message) ||
+//         error.message ||
+//         error.toString();
+//       return thunkAPI.rejectWithValue(message);
+//     }
+//   }
+// );
 export const AddCustomer = createAsyncThunk(
   "customers/addUser",
   async (user, thunkAPI) => {
@@ -111,12 +117,35 @@ export const DeleteClinetReq = createAsyncThunk(
     }
   }
 );
+export const updateCustomer = createAsyncThunk(
+  "customer/updateCustomer",
+  async (user, thunkAPI) => {
+    try {
+      console.log(user);
+      return await customerServices.updateCustomer(user);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const customerSlice = createSlice({
   name: "customers",
   initialState,
   reducers: {
     setCustomers: (state, action) => {
       state.customers = action.payload;
+    },
+    editCurrentCustomer: (state, action) => {
+      console.log(action);
+      state.currentCustomer = {
+        ...state.currentCustomer, [action.payload.type]: action.payload.data
+      };
     },
   },
   extraReducers: (builder) => {
@@ -199,5 +228,5 @@ export const customerSlice = createSlice({
       });
   },
 });
-export const { setCustomers } = customerSlice.actions;
+export const { setCustomers, editCurrentCustomer } = customerSlice.actions;
 export default customerSlice.reducer;

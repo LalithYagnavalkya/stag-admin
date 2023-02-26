@@ -193,7 +193,7 @@ const updateCustomer = (req, res) => {
   res.send("hello");
 };
 
-const deleteCustomer = (req, res) => {};
+const deleteCustomer = (req, res) => { };
 
 const getCustomer = (req, res) => {
   const { id } = req.body;
@@ -215,8 +215,8 @@ const getCustomer = (req, res) => {
     res.status(500).json({ message: err.mess });
   }
 };
-const updateReturns = (req, res) => {};
-const updateCapital = (req, res) => {};
+const updateReturns = (req, res) => { };
+const updateCapital = (req, res) => { };
 
 const exportUsers = async (req, res) => {
   csvtojson()

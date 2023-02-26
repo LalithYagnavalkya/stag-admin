@@ -102,10 +102,7 @@ const createCustomer = async (req, res) => {
 
 const getCustomers = async (req, res) => {
   try {
-    const { query, filter } = req.body;
-    const page = parseInt(req.query.page) || 1;
-    const limit = 20;
-
+    const { query, filter } = req.query;
     let isDue;
     if (filter === "paidUser") {
       isDue = false;
@@ -118,15 +115,11 @@ const getCustomers = async (req, res) => {
       res.status(400).json({ error: "Invalid filter" });
       return;
     }
-
-    console.log("req");
     const foundQuery = await User.find(
       { role: "user", username: new RegExp(query, "i"), isDue },
       { username: 1, capital: 1, returns: 1, dueDate: 1 }
     )
-      .skip((page - 1) * limit)
-      .limit(limit);
-    res.status(200).json(foundQuery);
+    res.status(200).json({ foundQuery });
   } catch (err) {
     console.log(err);
   }
@@ -167,11 +160,44 @@ const closeDueDate = async (req, res) => {
   }
 };
 const updateCustomer = (req, res) => {
-  console.log(req.body);
-  res.send("hello");
+  const { data, id } = req.body;
+  console.log(data)
+  const updateData = {};
+  for (const [key, value] of Object.entries(data)) {
+    if (key === 'returns') {
+      if (Array.isArray(value) && value.length) {
+        updateData[key] = value;
+      }
+    } else if (key === 'totalReturns') {
+    }
+    else if (value !== '') {
+      updateData[key] = value;
+    }
+  }
+  console.log(data.totalReturns.length);
+  // Check if updateData contains any keys
+  if (Object.keys(updateData).length || data.totalReturns.length) {
+    User.findByIdAndUpdate(
+      id,
+      { $inc: { totalReturns: data.totalReturns }, ...updateData }, // add $inc operator here
+      { new: true, omitUndefined: true },
+      (err, updatedDoc) => {
+        if (err) {
+          console.error(err);
+          res.status(500).json({ message: "failed to update" });
+        } else {
+          console.log(updatedDoc);
+          res.status(200).json({ message: "successfully updated" })
+        }
+      }
+    );
+  } else {
+    // updateData is empty, do not make the update
+    console.log('No data to update');
+  }
 };
 
-const deleteCustomer = (req, res) => {};
+const deleteCustomer = (req, res) => { };
 
 const getCustomer = (req, res) => {
   const { id } = req.body;
@@ -193,8 +219,8 @@ const getCustomer = (req, res) => {
     res.status(500).json({ message: err.mess });
   }
 };
-const updateReturns = (req, res) => {};
-const updateCapital = (req, res) => {};
+const updateReturns = (req, res) => { };
+const updateCapital = (req, res) => { };
 
 module.exports = {
   signin,

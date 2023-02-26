@@ -2,12 +2,8 @@ import baseUrl from "../../baseUrl";
 
 const getAllCustomers = async ({ token, filter, query }) => {
   const updatedToken = "Bearer " + token;
-  const response = await baseUrl.post(
-    "/admin/customers",
-    {
-      query,
-      filter,
-    },
+  const response = await baseUrl.get(
+    `/admin/customers?filter=${filter}&query=${query}`,
     {
       headers: {
         Authorization: updatedToken,
@@ -76,6 +72,7 @@ const getReqs = async ({ token }) => {
     return response;
   }
 };
+
 const deleteReq = async ({ token, _id }) => {
   const updatedToken = "Bearer " + token;
 
@@ -95,11 +92,31 @@ const deleteReq = async ({ token, _id }) => {
     return response;
   }
 };
+const updateCustomer = async ({ token, id, data }) => {
+  const updatedToken = "Bearer " + token;
+
+  const response = await baseUrl.put(
+    "/admin/updateCustomer",
+    { id, data },
+    {
+      headers: {
+        Authorization: updatedToken,
+      },
+    }
+  );
+  if (response.status == 200) {
+    console.log(response.data);
+    return response.data._id;
+  } else {
+    return response;
+  }
+};
 const customerServices = {
   getAllCustomers,
   AddCustomer,
   getCustomer,
   getReqs,
   deleteReq,
+  updateCustomer
 };
 export default customerServices;

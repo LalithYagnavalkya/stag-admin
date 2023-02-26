@@ -1,23 +1,54 @@
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { GetCustomer } from "../features/customers/customerSlice";
-import { Avatar, Button, IconButton, Tooltip } from "@mui/material";
+import { editCurrentCustomer, GetCustomer, updateCustomer } from "../features/customers/customerSlice";
+import { Avatar, Button, IconButton, Modal, TextField, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
 import EditIcon from "@mui/icons-material/Edit";
+import { Box } from "@mui/system";
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "white",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 const SingleCustomer = () => {
   const { id } = useParams();
   const { user } = useSelector((store) => store.auth);
   const { currentCustomer } = useSelector((store) => store.customers);
   const dispatch = useDispatch();
-
-  console.log(id);
+  const [ModalType, setModalType] = useState("")
+  const [modalOpen, setModalOpen] = useState(false)
+  const handleClose = () => setModalOpen(false);
+  const [input, setInput] = useState("")
+  // const [returns, setReturns] = useState([])
+  const returns = [];
+  const [editedUser, setEditedUser] = useState(
+    {
+      email: "",
+      phoneNumber: "",
+      bankaccount: "",
+      ifsc: "",
+      capital: "",
+      returns: [],
+      totalReturns: 0
+    }
+  );
+  console.log(editedUser);
   useEffect(() => {
     dispatch(GetCustomer({ token: user.token, id: id }));
   }, []);
-
+  useEffect(() => {
+    setInput("")
+  }, [modalOpen])
+  console.log(currentCustomer);
   return (
     <SinglePageCutomers>
       <div className="single-customer-container">
@@ -48,10 +79,13 @@ const SingleCustomer = () => {
               <div style={{ color: "#E55959" }}>Email not provided</div>
             ) : (
               <span className="customer-feild-value">
-                {currentCustomer.email}
+                {editedUser.email || currentCustomer.email}
               </span>
             )}
-            <Tooltip title="edit">
+            <Tooltip title="edit" onClick={() => {
+              setModalType("email")
+              setModalOpen(true)
+            }}>
               <IconButton>
                 <EditIcon sx={{ color: "#d4d4d4" }} />
               </IconButton>
@@ -66,7 +100,10 @@ const SingleCustomer = () => {
                 {currentCustomer?.phoneNumber}
               </span>
             )}
-            <Tooltip title="edit">
+            <Tooltip title="edit" onClick={() => {
+              setModalType("phone")
+              setModalOpen(true)
+            }}>
               <IconButton>
                 <EditIcon sx={{ color: "#d4d4d4" }} />
               </IconButton>
@@ -76,7 +113,7 @@ const SingleCustomer = () => {
             <span className="customer-feild-heading"> BankAccount </span>
 
             {currentCustomer?.bankaccount === "" ||
-            currentCustomer?.bankaccount == null ? (
+              currentCustomer?.bankaccount == null ? (
               <div style={{ color: "#E55959" }}>
                 Bank account number not provided
               </div>
@@ -85,7 +122,10 @@ const SingleCustomer = () => {
                 {currentCustomer?.bankaccount}
               </span>
             )}
-            <Tooltip title="edit">
+            <Tooltip title="edit" onClick={() => {
+              setModalType("bank")
+              setModalOpen(true)
+            }}>
               <IconButton>
                 <EditIcon sx={{ color: "#d4d4d4" }} />
               </IconButton>
@@ -103,21 +143,27 @@ const SingleCustomer = () => {
                 {currentCustomer?.ifsc}
               </span>
             )}
-            <Tooltip title="edit">
+            <Tooltip title="edit" onClick={() => {
+              setModalType("ifsc")
+              setModalOpen(true)
+            }}>
               <IconButton>
                 <EditIcon sx={{ color: "#d4d4d4" }} />
               </IconButton>
             </Tooltip>
           </div>
 
-          <div className="Update-payment-btn">Update payment</div>
+          <div className="Update-payment-btn" onClick={() => { setModalType("update payment"); setModalOpen(true) }}>Update payment</div>
           <div className="captial-returns-place">
             <>
               <div className="captial-place">
                 <span className="place-value">₹{currentCustomer?.capital}</span>
                 <span className="feild-heading-place">Capital</span>
               </div>
-              <Tooltip title="edit">
+              <Tooltip title="edit" onClick={() => {
+                setModalType("capital")
+                setModalOpen(true)
+              }}>
                 <IconButton>
                   <EditIcon sx={{ color: "#d4d4d4" }} />
                 </IconButton>
@@ -131,7 +177,10 @@ const SingleCustomer = () => {
                 </span>
                 <span className="feild-heading-place">Returns</span>
               </div>
-              <Tooltip title="edit">
+              <Tooltip title="edit" onClick={() => {
+                setModalType("returns")
+                setModalOpen(true)
+              }}>
                 <IconButton>
                   <EditIcon sx={{ color: "#d4d4d4" }} />
                 </IconButton>
@@ -140,6 +189,176 @@ const SingleCustomer = () => {
           </div>
         </div>
       </div>
+      <Modal
+        open={modalOpen}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Box
+            sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+          >
+            {ModalType === "email" &&
+              <>
+                <TextField required
+                  id="outlined-required"
+                  label="Email"
+                  type="email"
+                  variant="standard"
+                  onChange={(e) => {
+                    setInput(e.target.value)
+                  }}
+
+                />
+                <button style={{ padding: "1rem", backgroundColor: "green", borderRadius: "10px", outline: "none", cursor: "pointer" }}
+                  onClick={() => {
+                    setEditedUser({ ...editedUser, email: input })
+                    dispatch(editCurrentCustomer({ type: "email", data: input }))
+                    setModalOpen(false)
+                  }}
+                >save</button>
+                <button style={{ padding: "1rem", backgroundColor: "red", borderRadius: "10px", outline: "none", cursor: "pointer" }}
+                  onClick={() => setModalOpen(false)}>
+                  cancle</button>
+              </>
+            }
+            {ModalType === "phone" &&
+              <>
+                <TextField required
+                  id="outlined-required"
+                  label="Phone"
+                  type="number"
+                  variant="standard" onChange={(e) => {
+                    setInput(e.target.value)
+                  }} />
+                <button style={{ padding: "1rem", backgroundColor: "green", borderRadius: "10px", outline: "none", cursor: "pointer" }}
+                  onClick={() => {
+                    setEditedUser({ ...editedUser, phoneNumber: input })
+                    dispatch(editCurrentCustomer({ type: "phoneNumber", data: input }))
+                    setModalOpen(false)
+                  }}
+                >save</button>
+                <button onClick={() => setModalOpen(false)} style={{ padding: "1rem", backgroundColor: "red", borderRadius: "10px", outline: "none", cursor: "pointer" }}>cancle</button>
+              </>
+            }
+            {ModalType === "bank" &&
+              <>
+                <TextField required
+                  id="outlined-required"
+                  label="Bank Account"
+                  type="text"
+                  variant="standard" onChange={(e) => {
+                    setInput(e.target.value)
+                  }} />
+                <button
+                  onClick={() => {
+                    setEditedUser({ ...editedUser, bankaccount: input })
+                    dispatch(editCurrentCustomer({ type: "bankaccount", data: input }))
+                    setModalOpen(false)
+                  }}
+                  style={{ padding: "1rem", backgroundColor: "green", borderRadius: "10px", outline: "none", cursor: "pointer" }}>save</button>
+                <button onClick={() => setModalOpen(false)} style={{ padding: "1rem", backgroundColor: "red", borderRadius: "10px", outline: "none", cursor: "pointer" }}>cancle</button>
+              </>
+            }
+            {ModalType === "ifsc" &&
+              <>
+                <TextField required
+                  id="outlined-required"
+                  label="IFSC"
+                  type="text"
+                  variant="standard" onChange={(e) => {
+                    setInput(e.target.value)
+                  }} />
+                <button
+                  onClick={() => {
+                    setEditedUser({ ...editedUser, ifsc: input })
+                    dispatch(editCurrentCustomer({ type: "ifsc", data: input }))
+                    setModalOpen(false)
+                  }}
+                  style={{ padding: "1rem", backgroundColor: "green", borderRadius: "10px", outline: "none", cursor: "pointer" }}>save</button>
+                <button onClick={() => setModalOpen(false)} style={{ padding: "1rem", backgroundColor: "red", borderRadius: "10px", outline: "none", cursor: "pointer" }}>cancle</button>
+              </>
+            }
+            {ModalType === "capital" &&
+              <>
+                <TextField required
+                  id="outlined-required"
+                  label="capital"
+                  type="number"
+                  variant="standard" onChange={(e) => {
+                    setInput(e.target.value)
+                  }} />
+                <button
+                  onClick={() => {
+                    setEditedUser({ ...editedUser, capital: input })
+                    dispatch(editCurrentCustomer({ type: "capital", data: input }))
+                    setModalOpen(false)
+                  }}
+                  style={{ padding: "1rem", backgroundColor: "green", borderRadius: "10px", outline: "none", cursor: "pointer" }}>save</button>
+                <button onClick={() => setModalOpen(false)} style={{ padding: "1rem", backgroundColor: "red", borderRadius: "10px", outline: "none", cursor: "pointer" }}>cancle</button>
+              </>
+            }
+            {ModalType === "returns" &&
+              <>
+                <TextField required
+                  id="outlined-required"
+                  label="returns"
+                  type="number"
+                  variant="standard" onChange={(e) => returns[0] = e.target.value} />
+                <TextField required
+                  id="outlined-required"
+                  label="returns"
+                  type="number"
+                  variant="standard" onChange={(e) => returns[1] = e.target.value} />
+                <button
+                  onClick={() => {
+                    setEditedUser({ ...editedUser, returns: returns })
+                    dispatch(editCurrentCustomer({ type: "returns", data: returns }))
+                    setModalOpen(false)
+                  }}
+                  style={{ padding: "1rem", backgroundColor: "green", borderRadius: "10px", outline: "none", cursor: "pointer" }}>save</button>
+                <button onClick={() => setModalOpen(false)} style={{ padding: "1rem", backgroundColor: "red", borderRadius: "10px", outline: "none", cursor: "pointer" }}>cancle</button>
+              </>
+            }
+            {ModalType === "update payment" &&
+              <>
+                <TextField required
+                  id="outlined-required"
+                  label="Total returns"
+                  type="number"
+                  variant="standard" onChange={(e) => {
+                    setInput(e.target.value);
+                  }} />
+                <button
+                  onClick={() => {
+                    setEditedUser({ ...editedUser, totalReturns: input })
+                    setModalType("confirm")
+                    setModalOpen(true)
+                  }}
+                  style={{ padding: "1rem", backgroundColor: "green", borderRadius: "10px", outline: "none", cursor: "pointer" }}>save</button>
+                <button onClick={() => { setModalOpen(false); }} style={{ padding: "1rem", backgroundColor: "red", borderRadius: "10px", outline: "none", cursor: "pointer" }}>cancle</button>
+              </>
+            }
+            {ModalType === "confirm" &&
+              <>
+                <h3>Are you sure u want to update?</h3>
+                <button
+                  onClick={() => {
+                    dispatch(updateCustomer({
+                      token: user.token,
+                      id: currentCustomer._id,
+                      data: editedUser,
+                    }))
+                    setModalOpen(false)
+                  }}
+                  style={{ padding: "1rem", backgroundColor: "green", borderRadius: "10px", outline: "none", cursor: "pointer" }}>save</button>
+                <button onClick={() => { setModalOpen(false); }} style={{ padding: "1rem", backgroundColor: "red", borderRadius: "10px", outline: "none", cursor: "pointer" }}>cancle</button>
+              </>
+            }
+          </Box>
+        </Box>
+      </Modal>
     </SinglePageCutomers>
   );
 };
