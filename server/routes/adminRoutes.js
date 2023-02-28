@@ -22,7 +22,7 @@ adminRoutes.post("/signin", signin);
 
 adminRoutes.post("/createCustomer", auth, createCustomer);
 
-adminRoutes.post("/customers", auth, getCustomers);
+adminRoutes.post("/customers", getCustomers);
 
 adminRoutes.get("/getclientreqs", auth, getClinetReqs);
 

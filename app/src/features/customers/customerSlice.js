@@ -18,17 +18,27 @@ const initialState = {
 
 export const getAllCustomers = createAsyncThunk(
   "customers/getall",
-
   async (obj, { dispatch, getState, signal }) => {
     const { token, filter, query } = obj;
     const updatedToken = "Bearer " + token;
-    const response = await baseUrl.get(
-      `/admin/customers?query=${query}&filter=${filter}`,
+    const source = axios.CancelToken.source();
+    signal.addEventListener("abort", () => {
+      console.log("canceelled");
+      source.cancel();
+    });
+    const controller = new AbortController();
+    const response = await baseUrl.post(
+      "/admin/customers",
       { query, filter },
-      { headers: { Authorization: updatedToken } }
+      { headers: { Authorization: updatedToken } },
+      {
+        cancelToken: source.token,
+        signal: controller.signal,
+      }
     );
-    console.log(response.data.foundQuery);
-    return response.data.foundQuery;
+    // const response = await controller.abort();
+    console.log(response.data);
+    return response.data;
   }
 );
 export const getReqs = createAsyncThunk(

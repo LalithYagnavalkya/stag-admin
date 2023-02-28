@@ -102,7 +102,8 @@ const createCustomer = async (req, res) => {
 
 const getCustomers = async (req, res) => {
   try {
-    const { query, filter } = req.query;
+    const { query, filter } = req.body;
+    console.log(query)
     let isDue;
     if (filter === "paidUser") {
       isDue = false;
@@ -115,11 +116,13 @@ const getCustomers = async (req, res) => {
       res.status(400).json({ error: "Invalid filter" });
       return;
     }
+
+    console.log("req");
     const foundQuery = await User.find(
       { role: "user", username: new RegExp(query, "i"), isDue },
       { username: 1, capital: 1, returns: 1, dueDate: 1 }
     )
-    res.status(200).json({ foundQuery });
+    res.status(200).json(foundQuery);
   } catch (err) {
     console.log(err);
   }

@@ -1,23 +1,23 @@
 import baseUrl from "../../baseUrl";
 
-const getAllCustomers = async ({ token, filter, query }) => {
-  const updatedToken = "Bearer " + token;
-  const response = await baseUrl.get(
-    `/admin/customers?filter=${filter}&query=${query}`,
-    {
-      headers: {
-        Authorization: updatedToken,
-      },
-    }
-  );
-  // console.log(token);
-  if (response.status == 200) {
-    console.log(response);
-    return response.data;
-  } else {
-    return response;
-  }
-};
+// const getAllCustomers = async ({ token, filter, query }) => {
+//   const updatedToken = "Bearer " + token;
+//   const response = await baseUrl.get(
+//     `/admin/customers?filter=${filter}&query=${query}`,
+//     {
+//       headers: {
+//         Authorization: updatedToken,
+//       },
+//     }
+//   );
+//   // console.log(token);
+//   if (response.status == 200) {
+//     console.log(response);
+//     return response.data;
+//   } else {
+//     return response;
+//   }
+// };
 const AddCustomer = async ({ token, id, capital, returns }) => {
   const updatedToken = "Bearer " + token;
   console.log(returns);
@@ -112,7 +112,6 @@ const updateCustomer = async ({ token, id, data }) => {
   }
 };
 const customerServices = {
-  getAllCustomers,
   AddCustomer,
   getCustomer,
   getReqs,
