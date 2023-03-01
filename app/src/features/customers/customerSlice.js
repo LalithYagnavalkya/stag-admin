@@ -154,7 +154,8 @@ export const customerSlice = createSlice({
     editCurrentCustomer: (state, action) => {
       console.log(action);
       state.currentCustomer = {
-        ...state.currentCustomer, [action.payload.type]: action.payload.data
+        ...state.currentCustomer,
+        [action.payload.type]: action.payload.data,
       };
     },
   },
