@@ -18,7 +18,6 @@ const initialState = {
 
 export const getAllCustomers = createAsyncThunk(
   "customers/getall",
-
   async (obj, { dispatch, getState, signal }) => {
     const { token, filter, query } = obj;
     const updatedToken = "Bearer " + token;
@@ -29,7 +28,7 @@ export const getAllCustomers = createAsyncThunk(
     });
     const controller = new AbortController();
     const response = await baseUrl.post(
-      "/customers",
+      "/admin/customers",
       { query, filter },
       { headers: { Authorization: updatedToken } },
       {
@@ -59,6 +58,23 @@ export const getReqs = createAsyncThunk(
     }
   }
 );
+// export const updateCustomer = createAsyncThunk(
+//   "customers/updateCustomer",
+//   async (user, thunkAPI) => {
+//     try {
+//       console.log(user);
+//       return await customerServices.getReqs(user);
+//     } catch (error) {
+//       const message =
+//         (error.response &&
+//           error.response.data &&
+//           error.response.data.message) ||
+//         error.message ||
+//         error.toString();
+//       return thunkAPI.rejectWithValue(message);
+//     }
+//   }
+// );
 export const AddCustomer = createAsyncThunk(
   "customers/addUser",
   async (user, thunkAPI) => {
@@ -111,12 +127,36 @@ export const DeleteClinetReq = createAsyncThunk(
     }
   }
 );
+export const updateCustomer = createAsyncThunk(
+  "customer/updateCustomer",
+  async (user, thunkAPI) => {
+    try {
+      console.log(user);
+      return await customerServices.updateCustomer(user);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const customerSlice = createSlice({
   name: "customers",
   initialState,
   reducers: {
     setCustomers: (state, action) => {
       state.customers = action.payload;
+    },
+    editCurrentCustomer: (state, action) => {
+      console.log(action);
+      state.currentCustomer = {
+        ...state.currentCustomer,
+        [action.payload.type]: action.payload.data,
+      };
     },
   },
   extraReducers: (builder) => {
@@ -199,5 +239,5 @@ export const customerSlice = createSlice({
       });
   },
 });
-export const { setCustomers } = customerSlice.actions;
+export const { setCustomers, editCurrentCustomer } = customerSlice.actions;
 export default customerSlice.reducer;

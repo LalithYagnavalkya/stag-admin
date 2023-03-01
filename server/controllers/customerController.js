@@ -17,20 +17,7 @@ const generateOTP = (otp_length) => {
   }
   return OTP;
 };
-// console.log(moment.now());
-// console.log(moment(1675148359000).add(2, "month").format("DD MM YYYY"));
-// console.log(moment("2023-01-15T18:30:00.000Z").format("DD MM YYY"));
-// console.log(moment("2023-01-15T18:30:00.000Z").format("DD"));
 
-//fucntion to add feilds in all docs
-// user.find({}, (err, docs) => {
-//   docs.map(async (doc) => {
-//     await user.findByIdAndUpdate(
-//       { _id: doc._id },
-//       { isDue: false, _d: moment(doc.joiningDate).format("DD") }
-//     );
-//   });
-// });
 const loginCustomer = async (req, res) => {
   try {
     const { mobileNumber } = req.body;
@@ -181,7 +168,7 @@ const getClinetReqs = (req, res) => {
       .json({ message: "something went wrong", erro: err.message });
   }
 };
-const delteClinetReq = async (req, res) => {
+const deleteClinetReq = async (req, res) => {
   const { _id } = req.body;
   console.log(_id);
   try {
@@ -206,7 +193,7 @@ const updateCustomer = (req, res) => {
   res.send("hello");
 };
 
-const deleteCustomer = (req, res) => {};
+const deleteCustomer = (req, res) => { };
 
 const getCustomer = (req, res) => {
   const { id } = req.body;
@@ -228,8 +215,8 @@ const getCustomer = (req, res) => {
     res.status(500).json({ message: err.mess });
   }
 };
-const updateReturns = (req, res) => {};
-const updateCapital = (req, res) => {};
+const updateReturns = (req, res) => { };
+const updateCapital = (req, res) => { };
 
 const exportUsers = async (req, res) => {
   csvtojson()
@@ -259,5 +246,5 @@ module.exports = {
   getClinetReqs,
   verifyPhoneOtp,
   loginCustomer,
-  delteClinetReq,
+  deleteClinetReq,
 };

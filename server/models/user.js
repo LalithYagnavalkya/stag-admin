@@ -64,6 +64,10 @@ const userSchema = new mongoose.Schema(
     bank_no: {
       type: String,
     },
+    totalReturns: {
+      type: Number,
+      default: 0
+    },
     createdAt: {
       type: Date,
       default: Date.now,

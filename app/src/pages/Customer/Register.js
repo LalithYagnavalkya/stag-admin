@@ -11,7 +11,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import axios from "axios";
-import baseUrl from "../baseUrl";
+import baseUrl from "../../baseUrl";
 
 const Register = () => {
   let theme = createTheme();
@@ -114,11 +114,44 @@ const Register = () => {
     <>
       <ThemeProvider theme={theme}>
         <RegisterStyles>
-          <Box sx={{}}>
-            <Typography variant="h2" gutterBottom>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: {
+                xs: "column",
+                md: "row",
+                mt: { md: "2rem" },
+                paddingTop: "2rem",
+              },
+              columnGap: "4rem",
+            }}
+          >
+            <Typography
+              variant="h2"
+              gutterBottom
+              sx={{
+                color: "#D9D9D9",
+                fontFamily: "Metropolis",
+                display: { xs: "none", md: "inline" },
+                width: "30%",
+              }}
+            >
               Welcome to Stag Investments
             </Typography>
-            <Container maxWidth="sm">
+            <Container
+              maxWidth="xs"
+              sx={{
+                backgroundColor: "#E6E7E8",
+                padding: { xs: "2rem", md: "2rem" },
+              }}
+            >
+              <Typography
+                variant="h2"
+                gutterBottom
+                sx={{ color: "#5F5656", fontFamily: "Metropolis" }}
+              >
+                Register
+              </Typography>
               <Box sx={{ mt: 5 }}>
                 <TextField
                   error={false}
@@ -126,7 +159,10 @@ const Register = () => {
                   id="standard-basic"
                   fullWidth
                   label="Full Name as per bank account"
-                  variant="outlined"
+                  variant="filled"
+                  InputProps={{
+                    disableUnderline: true,
+                  }}
                   margin="dense"
                   value={data.name}
                   onChange={(e) =>
@@ -138,8 +174,11 @@ const Register = () => {
                   fullWidth
                   id="standard-basic"
                   label="Phone Number"
-                  variant="outlined"
+                  variant="filled"
                   margin="dense"
+                  InputProps={{
+                    disableUnderline: true,
+                  }}
                   value={data.phone}
                   onChange={(e) =>
                     setData((prev) => ({ ...prev, phone: e.target.value }))
@@ -150,8 +189,11 @@ const Register = () => {
                   fullWidth
                   id="standard-basic"
                   label="Bank account number"
-                  variant="outlined"
+                  variant="filled"
                   value={data.bankaccount}
+                  InputProps={{
+                    disableUnderline: true,
+                  }}
                   onChange={(e) => {
                     setData((prev) => ({
                       ...prev,
@@ -165,8 +207,11 @@ const Register = () => {
                   error={isbankError}
                   id="standard-basic"
                   label="Confirm Bank account number"
-                  variant="outlined"
+                  variant="filled"
                   value={confimbank}
+                  InputProps={{
+                    disableUnderline: true,
+                  }}
                   onChange={(e) => {
                     setConfirmBank(e.target.value);
                   }}
@@ -176,7 +221,10 @@ const Register = () => {
                   fullWidth
                   id="standard-basic"
                   label="IFSC"
-                  variant="outlined"
+                  InputProps={{
+                    disableUnderline: true,
+                  }}
+                  variant="filled"
                   value={data.ifsc}
                   onChange={(e) => {
                     setData((prev) => ({ ...prev, ifsc: e.target.value }));
@@ -187,8 +235,11 @@ const Register = () => {
                   fullWidth
                   id="standard-basic"
                   label="Branch"
-                  variant="outlined"
+                  variant="filled"
                   value={data.branch}
+                  InputProps={{
+                    disableUnderline: true,
+                  }}
                   onChange={(e) =>
                     setData((prev) => ({ ...prev, branch: e.target.value }))
                   }
@@ -211,14 +262,14 @@ const Register = () => {
                   }
                 />
               </Box>
-              <Box textAlign={"center"}>
+              <Box textAlign={"right"} mt="2rem">
                 <Button
                   sx={{ mt: 1.5, justifyContent: "center" }}
                   variant="contained"
                   color="success"
                   onClick={sumbitHandler}
                 >
-                  Save
+                  Submit
                 </Button>
               </Box>
             </Container>
@@ -237,9 +288,9 @@ const RegisterStyles = styled.div`
   justify-content: center;
   padding-top: 4rem;
   padding: 4rem 5rem;
-  background-color: #e4e4e4;
+  background-color: #1e1e1e;
 
   @media (max-width: 768px) {
-    padding: 4rem 1rem;
+    padding: 0rem 1rem;
   }
 `;

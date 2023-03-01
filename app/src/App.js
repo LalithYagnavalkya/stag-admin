@@ -11,6 +11,7 @@ import {
   SingleCustomer,
   UserInfo,
   Register,
+  LoginPageCustomer,
 } from "./pages";
 import DefaultLayout from "./layout/DefaultLayout";
 import styled from "styled-components";
@@ -36,6 +37,7 @@ function App() {
           </Route>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<LoginPage />} />
+          {/* <Route path="/login" element={<LoginPageCustomer />} /> */}
           <Route
             path="*"
             element={

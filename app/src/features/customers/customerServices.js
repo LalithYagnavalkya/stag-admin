@@ -1,32 +1,28 @@
 import baseUrl from "../../baseUrl";
 
-const getAllCustomers = async ({ token, filter, query }) => {
-  const updatedToken = "Bearer " + token;
-  const response = await baseUrl.post(
-    "/customers",
-    {
-      query,
-      filter,
-    },
-    {
-      headers: {
-        Authorization: updatedToken,
-      },
-    }
-  );
-  // console.log(token);
-  if (response.status == 200) {
-    console.log(response);
-    return response.data;
-  } else {
-    return response;
-  }
-};
+// const getAllCustomers = async ({ token, filter, query }) => {
+//   const updatedToken = "Bearer " + token;
+//   const response = await baseUrl.get(
+//     `/admin/customers?filter=${filter}&query=${query}`,
+//     {
+//       headers: {
+//         Authorization: updatedToken,
+//       },
+//     }
+//   );
+//   // console.log(token);
+//   if (response.status == 200) {
+//     console.log(response);
+//     return response.data;
+//   } else {
+//     return response;
+//   }
+// };
 const AddCustomer = async ({ token, id, capital, returns }) => {
   const updatedToken = "Bearer " + token;
   console.log(returns);
   const response = await baseUrl.post(
-    "/createCustomer",
+    "/admin/createCustomer",
     { id, returns, capital },
     {
       headers: {
@@ -47,7 +43,7 @@ const getCustomer = async ({ token, id }) => {
   console.log(id);
   console.log(updatedToken);
   const response = await baseUrl.post(
-    "/getcustomer",
+    "/admin/getcustomer",
     { id: id },
     {
       headers: {
@@ -64,7 +60,7 @@ const getCustomer = async ({ token, id }) => {
 };
 const getReqs = async ({ token }) => {
   const updatedToken = "Bearer " + token;
-  const response = await baseUrl.get("/getclientreqs", {
+  const response = await baseUrl.get("/admin/getclientreqs", {
     headers: {
       Authorization: updatedToken,
     },
@@ -76,11 +72,12 @@ const getReqs = async ({ token }) => {
     return response;
   }
 };
+
 const deleteReq = async ({ token, _id }) => {
   const updatedToken = "Bearer " + token;
 
   const response = await baseUrl.post(
-    "/deleteclientreq",
+    "/admin/deleteclientreq",
     { _id },
     {
       headers: {
@@ -95,11 +92,30 @@ const deleteReq = async ({ token, _id }) => {
     return response;
   }
 };
+const updateCustomer = async ({ token, id, data }) => {
+  const updatedToken = "Bearer " + token;
+
+  const response = await baseUrl.put(
+    "/admin/updateCustomer",
+    { id, data },
+    {
+      headers: {
+        Authorization: updatedToken,
+      },
+    }
+  );
+  if (response.status == 200) {
+    console.log(response.data);
+    return response.data._id;
+  } else {
+    return response;
+  }
+};
 const customerServices = {
-  getAllCustomers,
   AddCustomer,
   getCustomer,
   getReqs,
   deleteReq,
+  updateCustomer
 };
 export default customerServices;

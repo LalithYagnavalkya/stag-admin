@@ -30,17 +30,14 @@ app.listen(process.env.PORT, () => {
 //   });
 // });
 // Schedule tasks to be run on the server.
-// cron.schedule("0 0 1 * *", function () {
-//   const today = moment().format("DD");
-//   User.find({ _d: today.toString() }, (err, docs) => {
-//     docs.map(async (doc) => {
-//       const newDueDate = moment(doc.previousDueDate).add("1", "month");
+cron.schedule("0 0 1 * *", function () {
+  User.updateMany({}, { isDue: true }, function (err, result) {
+    if (err) {
+      console.log("Error updating users:", err);
+    } else {
+      console.log("Number of users updated:", result);
+    }
+  });
+  console.log("running a task every month");
+});
 
-//       await User.findOneAndUpdate(
-//         { _id: doc._id },
-//         { isDue: true, previousDueDate: doc.dueDate, dueDate: newDueDate }
-//       );
-//     });
-//   });
-//   console.log("running a task every day");
-// });
